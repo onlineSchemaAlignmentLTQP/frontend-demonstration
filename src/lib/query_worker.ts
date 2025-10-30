@@ -4,9 +4,9 @@ import {
   type WorkerMessage,
   type WorkerResponse,
   type SerializedRules,
+  type WorkerBindingResponse
 } from "$lib";
 import type { BindingsStream } from "@comunica/types";
-import { rdfParser } from "rdf-parse";
 import {
   type SafePromise,
   type Result,
@@ -14,9 +14,10 @@ import {
   result,
   isError,
 } from "result-interface";
-import Streamify from "streamify-string";
+import { Parser as N3Parser } from "n3";
 
 const ENGINE = new QueryEngine();
+const RDF_PARSER = new N3Parser();
 
 // Listen for messages from the main thread
 self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
@@ -26,7 +27,7 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
   switch (data.type) {
     case "query": {
         const { query, rules:serializedRules } = data.payload;
-        const rulesResponse = await convertRules(serializedRules);
+        const rulesResponse = convertRules(serializedRules);
         if(isError(rulesResponse)){
           response = { type:"error", result: `the rules are malformed: ${rulesResponse.error}`};
           return;
@@ -48,37 +49,25 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
   self.postMessage(response);
 };
 
-async function convertRules(
+ function convertRules(
   rules: SerializedRules,
-): SafePromise<Map<string, RDF.Quad[]>, string> {
+): Result<Map<string, RDF.Quad[]>, string> {
   const resp: Map<string, RDF.Quad[]> = new Map();
-  const operations: Promise<Result<[string, RDF.Quad[]], string>>[] = [];
-
+   let errorOrUndefined: Error|undefined = undefined ;
   for (const [key, kg] of rules) {
-    const operation: Promise<Result<[string, RDF.Quad[]], string>> = new Promise(
-      (resolve) => {
-        const quads: RDF.Quad[] = [];
-        rdfParser
-          .parse(Streamify(kg), { contentType: "text/turtle" })
-          .on("data", (quad: RDF.Quad) => {
-            quads.push(quad);
-          })
-          .on("error", (err: Error) => {
-            resolve(error(err.message));
-          })
-          .on("end", () => {
-            resolve(result([key, quads]));
-          });
-        operations.push(operation);
-      },
-    );
-  }
-  const operationResults = await Promise.all(operations);
-  for (const operationResult of operationResults) {
-    if (isError(operationResult)) {
-      return operationResult;
+    const quads: RDF.Quad[] = [];
+
+    RDF_PARSER.parse(kg, (error, quad)=>{
+      if(quad){
+        quads.push(quad)
+      }else{
+        errorOrUndefined = error;
+      }
+    });
+    if(errorOrUndefined !== undefined){
+      return error(errorOrUndefined);
     }
-    resp.set(operationResult.value[0], operationResult.value[1]);
+    resp.set(key, quads);
   }
   return result(resp);
 }
@@ -95,11 +84,11 @@ async function executeQuery(
   return bindingsStream;
 }
 
-function reportResults(bindingsStream:BindingsStream, postFunction: (message:string)=>void):SafePromise<number, string>{
+function reportResults(bindingsStream:BindingsStream, postFunction: (message:WorkerBindingResponse)=>void):SafePromise<number, string>{
   const startTime = performance.now();
   return new Promise((resolve)=>{
     bindingsStream.on("data", (binding: RDF.Bindings) => {
-      postFunction(binding.toString());
+      postFunction({type:"binding", result: binding.toString()});
     });
 
     bindingsStream.on("error", (err: Error) => {

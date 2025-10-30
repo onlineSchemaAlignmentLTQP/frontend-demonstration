@@ -1,0 +1,112 @@
+<script lang="ts">
+    import { onMount } from "svelte";
+    import { type Yasqe as YasqeType } from "@triply/yasqe";
+    import {
+        type WorkerQueryMessage,
+        type WorkerEndResponse,
+        type WorkerBindingResponse,
+        type WorkerErrorResponse,
+        resetQueryState
+    } from "$lib";
+    import { QUERY_STATE } from "../state.svelte";
+
+    type WorkerQueryResponse =
+        | WorkerBindingResponse
+        | WorkerEndResponse
+        | WorkerErrorResponse;
+    let yasguiDiv: HTMLElement | undefined;
+    let yasqe: YasqeType | undefined;
+    let worker: Worker;
+    const originalBorderColor = "#d1d1d1";
+    const queryRunningColor = "green";
+    const queryStopColor = "red";
+
+    function newWorker():void{
+      if(worker){
+        worker.terminate();
+      }
+      worker = new Worker(new URL("$lib/query_worker.ts", import.meta.url), {
+          type: "module",
+      });
+
+      worker.onerror = (event) => {
+        console.warn('Worker crashed!');
+        console.warn('Error message:', event.message);
+        console.warn('Filename:', event.filename);
+        console.warn('Line number:', event.lineno);
+
+        event.preventDefault();
+
+        worker.terminate();
+        newWorker();
+      };
+
+      worker.onmessage = (event: MessageEvent<WorkerQueryResponse>) => {
+          const data = event.data;
+          if (data.type === "binding") {
+              console.log(data.result);
+              QUERY_STATE.results.push(JSON.parse(data.result));
+          } else if (data.type === "end") {
+            console.log(`query ended after ${data.result.execution_time}`);
+              QUERY_STATE.executionTime = data.result.execution_time;
+              QUERY_STATE.queryIsRunning = false;
+              setYasqeBorderColor(originalBorderColor);
+
+          } else if (data.type === "error") {
+            console.warn(`there was an error when performing the query ${data.result}`);
+              QUERY_STATE.error = data.result;
+              QUERY_STATE.queryIsRunning = false;
+              setYasqeBorderColor(originalBorderColor);
+          } else {
+              console.warn(`There was an unknown response ${data}`);
+          }
+      };
+    }
+
+    function setYasqeBorderColor(color:string):void{
+      const yasqeElement:HTMLElement|null = document.querySelector('.yasqe .CodeMirror');
+      if(yasqeElement){
+        yasqeElement.style.borderColor = color;
+      }
+    }
+
+    onMount(async () => {
+        newWorker();
+
+        const Yasqe = (await import("@triply/yasqe")).default;
+        yasqe = new Yasqe(yasguiDiv!, {
+            showQueryButton: true,
+            resizeable:false,
+        });
+
+        yasqe.on("query", async (instance: YasqeType) => {
+            if(QUERY_STATE.queryIsRunning === true){
+              console.log("stoping the query");
+              QUERY_STATE.queryIsRunning = false;
+              newWorker();
+              setYasqeBorderColor(queryStopColor);
+              return;
+            }
+            console.log("starting the query");
+            resetQueryState(QUERY_STATE);
+            setYasqeBorderColor(queryRunningColor);
+            QUERY_STATE.queryIsRunning = true;
+            const query = instance.getValue();
+            const rules: Map<string, string> = new Map();
+
+            const message: WorkerQueryMessage = {
+                type: "query",
+                payload: { query, rules },
+            };
+            worker.postMessage(message);
+        });
+    });
+</script>
+
+<div bind:this={yasguiDiv} ></div>
+
+<style>
+     :global(.yasgui .autocompleteWrapper) {
+        display: none !important;
+    }
+</style>
