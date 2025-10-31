@@ -8,7 +8,7 @@
         type WorkerErrorResponse,
         resetQueryState
     } from "$lib";
-    import { QUERY_STATE } from "../state.svelte";
+    import { EVENT_TARGET, QUERY_STATE, RULES, PROPOSED_QUERY_EVENT, CHANGE_SCHEMA_ALIGNMENT_STATE } from "../state.svelte";
 
     type WorkerQueryResponse =
         | WorkerBindingResponse
@@ -20,6 +20,7 @@
     const originalBorderColor = "#d1d1d1";
     const queryRunningColor = "green";
     const queryStopColor = "red";
+    let schemaAlignment = true;
 
     function newWorker():void{
       if(worker){
@@ -53,7 +54,7 @@
               setYasqeBorderColor(originalBorderColor);
 
           } else if (data.type === "error") {
-            console.warn(`there was an error when performing the query ${data.result}`);
+              console.warn(`there was an error when performing the query ${data.result}`);
               QUERY_STATE.error = data.result;
               QUERY_STATE.queryIsRunning = false;
               setYasqeBorderColor(originalBorderColor);
@@ -76,8 +77,22 @@
         const Yasqe = (await import("@triply/yasqe")).default;
         yasqe = new Yasqe(yasguiDiv!, {
             showQueryButton: true,
+            createShareableLink:false,
             resizeable:false,
         });
+        yasqe.setSize("100%", "100%");
+
+        EVENT_TARGET.addEventListener(PROPOSED_QUERY_EVENT, ((e: CustomEvent) => {
+          if(yasqe){
+            yasqe.setValue(e.detail);
+          }else{
+            console.warn("yasque is not yet instantiated");
+          }
+        }) as EventListener);
+
+        EVENT_TARGET.addEventListener(CHANGE_SCHEMA_ALIGNMENT_STATE, ((e: CustomEvent<boolean>) => {
+          schemaAlignment = e.detail;
+        }) as EventListener);
 
         yasqe.on("query", async (instance: YasqeType) => {
             if(QUERY_STATE.queryIsRunning === true){
@@ -92,21 +107,29 @@
             setYasqeBorderColor(queryRunningColor);
             QUERY_STATE.queryIsRunning = true;
             const query = instance.getValue();
-            const rules: Map<string, string> = new Map();
 
             const message: WorkerQueryMessage = {
                 type: "query",
-                payload: { query, rules },
+                payload: { query, rules: RULES.kg, schemaAlignment },
             };
             worker.postMessage(message);
         });
     });
 </script>
 
-<div bind:this={yasguiDiv} ></div>
+<div bind:this={yasguiDiv} class="editor" ></div>
 
 <style>
+    .editor{
+         height: 100%;
+         width: 60%;
+    }
+    :global(.yasqe){
+        height: 100%;
+    }
+
      :global(.yasgui .autocompleteWrapper) {
         display: none !important;
+        height: 100%;
     }
 </style>

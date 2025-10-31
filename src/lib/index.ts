@@ -1,5 +1,6 @@
 // place files you want to import through the `$lib` alias in this folder.
 
+
 export interface IQueryState{
   queryIsRunning:boolean;
   error:string|undefined;
@@ -21,7 +22,6 @@ export function resetQueryState(queryState:IQueryState):void{
   queryState.results = [];
   queryState.executionTime = undefined;
 }
-export type SerializedRules = Map<string, string>;
 
 export interface WorkerMessage {
   type: string;
@@ -32,7 +32,8 @@ export interface WorkerQueryMessage extends WorkerMessage {
   type: "query";
   payload: {
     query: string;
-    rules: SerializedRules;
+    rules: string;
+    schemaAlignment: boolean;
   };
 }
 

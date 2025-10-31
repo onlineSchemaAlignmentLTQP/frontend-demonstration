@@ -29,13 +29,16 @@
 <style>
     .meta-result{
         margin-top: 1%;
+        margin-left: 2%;
+        height: 100%;
     }
 
     .result-panel{
         border: 1px solid #d1d1d1;
+        height: 100%;
     }
     .bindings-entries{
-        height: 30vw;
+        height: 90%;
         overflow: auto;
     }
     .bindings-entry {
