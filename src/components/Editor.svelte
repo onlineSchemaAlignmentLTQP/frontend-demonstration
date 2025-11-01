@@ -18,8 +18,8 @@
     let yasqe: YasqeType | undefined;
     let worker: Worker;
     const originalBorderColor = "#d1d1d1";
-    const queryRunningColor = "green";
-    const queryStopColor = "red";
+    const queryRunningBorderColor = "green";
+    const queryStopBorderColor = "red";
     let schemaAlignment = true;
 
     function newWorker():void{
@@ -99,12 +99,12 @@
               console.log("stoping the query");
               QUERY_STATE.queryIsRunning = false;
               newWorker();
-              setYasqeBorderColor(queryStopColor);
+              setYasqeBorderColor(queryStopBorderColor);
               return;
             }
             console.log("starting the query");
             resetQueryState(QUERY_STATE);
-            setYasqeBorderColor(queryRunningColor);
+            setYasqeBorderColor(queryRunningBorderColor);
             QUERY_STATE.queryIsRunning = true;
             const query = instance.getValue();
 
