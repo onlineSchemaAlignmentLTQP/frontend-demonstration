@@ -102,7 +102,7 @@
               setYasqeBorderColor(queryStopBorderColor);
               return;
             }
-            console.log("starting the query");
+            console.log(`starting the query ${schemaAlignment?"with schema alignment":""} `);
             resetQueryState(QUERY_STATE);
             setYasqeBorderColor(queryRunningBorderColor);
             QUERY_STATE.queryIsRunning = true;
