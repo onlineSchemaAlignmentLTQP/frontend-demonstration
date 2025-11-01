@@ -15,11 +15,15 @@
     "test": "npm run test:unit -- --run"
   },
   "devDependencies": {
+    "@comunica/types": "^4.4.0",
     "@eslint/compat": "^1.4.0",
     "@eslint/js": "^9.36.0",
+    "@rdfjs/types": "^2.0.1",
     "@sveltejs/adapter-auto": "^6.1.0",
+    "@sveltejs/adapter-static": "^3.0.10",
     "@sveltejs/kit": "^2.43.2",
     "@sveltejs/vite-plugin-svelte": "^6.2.0",
+    "@types/codemirror": "^5.60.17",
     "@types/node": "^22",
     "@vitest/browser": "^3.2.4",
     "eslint": "^9.36.0",
@@ -32,18 +36,25 @@
     "typescript-eslint": "^8.44.1",
     "vite": "^7.1.7",
     "vitest": "^3.2.4",
-    "vitest-browser-svelte": "^1.1.0",
-    "@rdfjs/types": "^2.0.1"
+    "vitest-browser-svelte": "^1.1.0"
   },
   "dependencies": {
-    "@comunica/types": "^4.4.0",
+    "@codemirror/state": "^6.5.2",
+    "@codemirror/view": "^6.38.6",
+    "@comunica/query-sparql-rdfjs": "^4.4.1",
+    "@tailwindcss/vite": "^4.1.16",
     "@triply/yasgui": "^4.2.28",
     "@triply/yasqe": "^4.2.28",
-    "@types/streamify-string": "^1.0.4",
+    "codemirror": "^6.0.2",
+    "codemirror-lang-turtle": "^0.0.2",
+    "flowbite": "^3.1.2",
+    "flowbite-svelte": "^1.20.1",
+    "flowbite-svelte-icons": "^3.0.0",
+    "n3": "^1.26.0",
     "query-sparql-link-traversal-solid-schema-alignment": "^0.0.3",
-    "rdf-parse": "^4.0.0",
+    "rdf-data-factory": "^2.0.2",
     "rdf-serialize": "^4.0.1",
     "result-interface": "^2.3.3",
-    "streamify-string": "^1.0.1"
+    "tailwindcss": "^4.1.16"
   }
 }

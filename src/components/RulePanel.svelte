@@ -1,0 +1,82 @@
+<script lang="ts">
+  import { onMount } from 'svelte';
+  import {basicSetup} from "codemirror";
+  import {EditorView} from "@codemirror/view";
+  import {EditorState, Compartment} from "@codemirror/state";
+  import { turtle } from 'codemirror-lang-turtle';
+  import {RULES, EVENT_TARGET, CHANGE_SCHEMA_ALIGNMENT_STATE} from "../state.svelte";
+
+  let editor: HTMLElement | undefined;
+  const exampleRules = `@prefix ex: <https://exemple.com#> .
+@prefix semmap: <https://semanticmapping.org/vocab#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+[]
+    a semmap:RuleSet ;
+    semmap:subweb "*" ;
+    semmap:disallowedRules (ex:randomAlignment);
+    semmap:rule _:rule1 .
+
+_:rule1
+    semmap:premise ex:foo ;
+    semmap:inference skos:exactMatch ;
+    semmap:conclusion ex:bar .
+    `;
+  RULES.kg = exampleRules;
+  const readOnly = new Compartment();
+
+  onMount(()=>{
+     const view = new EditorView({
+      doc:  exampleRules,
+      parent: editor!,
+      extensions: [
+        basicSetup,
+        turtle(),
+        readOnly.of(EditorState.readOnly.of(false)),
+        EditorView.updateListener.of((update) => {
+              if (update.docChanged) {
+                const text = update.state.doc.toString();
+                RULES.kg = text;
+              }
+            })
+      ],
+    });
+
+     EVENT_TARGET.addEventListener(CHANGE_SCHEMA_ALIGNMENT_STATE, ((e: CustomEvent<boolean>) => {
+       view.dispatch({
+               effects: readOnly.reconfigure(EditorState.readOnly.of(!e.detail))
+             });
+       if(!e.detail == true){
+         editor!.classList.add("disable");
+       }else{
+         editor!.classList.remove("disable");
+       }
+
+     }) as EventListener);
+  })
+
+</script>
+
+<div bind:this={editor} class="editor" ></div>
+
+<style>
+    .editor{
+        width: 40%;
+        height: 100%;
+        border: 1px solid #d1d1d1;
+    }
+    :global(.cm-editor){
+        height: 100%;
+    }
+
+    :global(.cm-editor .readOnly) {
+    background-color: #cccccc;
+    }
+
+    :global(.disable){
+        opacity: 0.6;
+        cursor: not-allowed;
+        background-color: #f5f5f5;
+        color: #6c757d;
+    }
+</style>
