@@ -1,0 +1,13 @@
+@prefix semmap: <https://semanticmapping.org/vocab#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+@prefix snvoc: <http://localhost:3000/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>.
+
+[]
+    a semmap:RuleSet ;
+    semmap:subweb "*" ;
+    semmap:rule _:rule1 .
+
+_:rule1
+    semmap:premise snvoc:hasCreator ;
+    semmap:inference skos:closeMatch ;
+    semmap:conclusion snvoc:fromAuthor .

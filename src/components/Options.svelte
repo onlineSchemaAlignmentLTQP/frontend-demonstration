@@ -2,10 +2,12 @@
     import ProposedQueryButton from "./ProposedQueryButton.svelte";
     import SchemaAlignmentSwitch from "./SchemaAlignmentSwitch.svelte";
     import NetworkSwitch from "./NetworkSwitch.svelte";
+    import ProposedRulesQueryButton from "./ProposedRulesQueryButton.svelte";
 </script>
 
 <div class="options">
     <ProposedQueryButton />
+    <ProposedRulesQueryButton />
     <SchemaAlignmentSwitch />
     <NetworkSwitch />
 </div>

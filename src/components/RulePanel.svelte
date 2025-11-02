@@ -4,7 +4,7 @@
   import {EditorView} from "@codemirror/view";
   import {EditorState, Compartment} from "@codemirror/state";
   import { turtle } from 'codemirror-lang-turtle';
-  import {RULES, EVENT_TARGET, CHANGE_SCHEMA_ALIGNMENT_STATE_EVENT} from "../state.svelte";
+  import {RULES, EVENT_TARGET, CHANGE_RULE_EVENT, CHANGE_SCHEMA_ALIGNMENT_STATE_EVENT} from "../state.svelte";
 
   let editor: HTMLElement | undefined;
   const exampleRules = `@prefix ex: <https://exemple.com#> .
@@ -13,21 +13,33 @@
 
 []
     a semmap:RuleSet ;
+    # Defines where the rules apply. "*" means the rules are valid for all subwebs.
     semmap:subweb "*" ;
-    semmap:disallowedRules (ex:randomAlignment);
+    # Lists any rules disable by the engine.
+    semmap:disallowedRules (ex:randomAlignment) ;
+    # Declares the rules included in this rule set.
     semmap:rule _:rule1 .
 
 _:rule1
+    # RDF term that serves as the starting point for the alignment.
     semmap:premise ex:foo ;
+    # The semantic relationship between the premise and conclusion.
     semmap:inference skos:exactMatch ;
+    # RDF term that the premise is aligned to.
     semmap:conclusion ex:bar .
-    `;
+  `;
+
   RULES.kg = exampleRules;
   const readOnly = new Compartment();
 
   onMount(()=>{
+    let initialRules:string = exampleRules;
+    const storedRules = localStorage.getItem('rules');
+    if (storedRules!== null) {
+      initialRules = storedRules;
+    }
      const view = new EditorView({
-      doc:  exampleRules,
+      doc:  initialRules,
       parent: editor!,
       extensions: [
         basicSetup,
@@ -37,10 +49,20 @@ _:rule1
               if (update.docChanged) {
                 const text = update.state.doc.toString();
                 RULES.kg = text;
+                localStorage.setItem('rules', text);
               }
             })
       ],
     });
+     EVENT_TARGET.addEventListener(CHANGE_RULE_EVENT, ( (e: CustomEvent<string>)=>{
+       view.dispatch({
+           changes: {
+             from: 0,
+             to: view.state.doc.length,
+             insert: e.detail
+           }
+         });
+     }) as EventListener);
 
      EVENT_TARGET.addEventListener(CHANGE_SCHEMA_ALIGNMENT_STATE_EVENT, ((e: CustomEvent<boolean>) => {
        view.dispatch({

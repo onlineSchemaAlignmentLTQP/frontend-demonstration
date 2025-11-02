@@ -1,0 +1,59 @@
+@prefix semmap: <https://semanticmapping.org/vocab#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix snvocv1: <http://localhost:3000/www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/> .
+@prefix snvocv2: <http://localhost:3000/www.ldbc.eu/ldbc_socialnet/2.0/vocabulary/> .
+
+[]
+    a semmap:RuleSet ;
+    semmap:subweb "*" ;
+    semmap:rule
+        [
+            semmap:premise snvocv1:Person ;
+            semmap:inference skos:exactMatch ;
+            semmap:conclusion snvocv2:Person
+        ],
+        [
+            semmap:premise snvocv1:id ;
+            semmap:inference skos:exactMatch ;
+            semmap:conclusion snvocv2:id
+        ],
+        [
+            semmap:premise snvocv1:firstName ;
+            semmap:inference skos:exactMatch ;
+            semmap:conclusion snvocv2:firstName
+        ],
+        [
+            semmap:premise snvocv1:lastName ;
+            semmap:inference skos:exactMatch ;
+            semmap:conclusion snvocv2:lastName
+        ],
+        [
+            semmap:premise snvocv1:gender ;
+            semmap:inference skos:exactMatch ;
+            semmap:conclusion snvocv2:gender
+        ],
+        [
+            semmap:premise snvocv1:birthday ;
+            semmap:inference skos:exactMatch ;
+            semmap:conclusion snvocv2:birthday
+        ],
+        [
+            semmap:premise snvocv1:creationDate ;
+            semmap:inference skos:exactMatch ;
+            semmap:conclusion snvocv2:creationDate
+        ],
+        [
+            semmap:premise snvocv1:locationIP ;
+            semmap:inference skos:exactMatch ;
+            semmap:conclusion snvocv2:locationIP
+        ],
+        [
+            semmap:premise snvocv1:isLocatedIn ;
+            semmap:inference skos:exactMatch ;
+            semmap:conclusion snvocv2:isLocatedIn
+        ],
+        [
+            semmap:premise snvocv1:browserUsed ;
+            semmap:inference skos:exactMatch ;
+            semmap:conclusion snvocv2:browserUsed
+        ] .

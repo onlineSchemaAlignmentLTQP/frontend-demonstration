@@ -33,3 +33,5 @@ export const PROPOSED_QUERY_EVENT = "proposedQuery";
 export const CHANGE_SCHEMA_ALIGNMENT_STATE_EVENT = "schemaAlignmentState";
 
 export const CHANGE_NETWORK_EVENT = "changeNetwork";
+
+export const CHANGE_RULE_EVENT = "changeRule";
