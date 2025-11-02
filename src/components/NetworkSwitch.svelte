@@ -1,47 +1,24 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { ButtonGroup, Button, Color } from "flowbite-svelte";
+  import { ButtonGroup, Button } from "flowbite-svelte";
   import configFile from "../../config.json?raw";
-  import { CURRENT_QUERY_CHANGE_EVENT, EVENT_TARGET } from "../state.svelte";
-
-  type ButtonColor = 'alternative' | 'blue' | 'dark' | 'green' | 'light' | 'primary' | 'purple' | 'red' | 'yellow' | 'none';
-
-  const defaultColor:ButtonColor = "light";
-  const activatedColor: ButtonColor = "green";
-
-  let colorButtonMultipleVocabulary:ButtonColor = "light";
-  let colorButtonOutside: ButtonColor= "light";
-  let colorButtonSingleVocabulary: ButtonColor = "light";
-
+  import {  EVENT_TARGET, CHANGE_NETWORK_EVENT, type IChangeNetwork } from "../state.svelte";
 
   const config = JSON.parse(configFile);
   const normalNetworkHostName:string = config["normalNetworkHostName"];
   const multipleVocabHostName:string = config["multipleVocabHostName"];
 
+  function changeNetworkEvent(newNetwork:string, previousNetwork:string){
+    const event = new CustomEvent<IChangeNetwork>(CHANGE_NETWORK_EVENT, {"detail": {
+      previousNetwork,
+      newNetwork
+    }});
+    EVENT_TARGET.dispatchEvent(event);
+  }
 
-  onMount(()=>{
-    EVENT_TARGET.addEventListener(CURRENT_QUERY_CHANGE_EVENT, ((e: CustomEvent<string>)=>{
-      const query = e.detail;
-      if(query.includes(normalNetworkHostName)){
-        colorButtonSingleVocabulary = activatedColor;
-        colorButtonMultipleVocabulary =defaultColor;
-        colorButtonOutside = defaultColor;
-      } else if(query.includes(multipleVocabHostName)){
-        colorButtonSingleVocabulary = defaultColor;
-        colorButtonMultipleVocabulary =activatedColor;
-        colorButtonOutside = defaultColor;
-      }else{
-        colorButtonSingleVocabulary = defaultColor;
-        colorButtonMultipleVocabulary = defaultColor;
-        colorButtonOutside = activatedColor;
-      }
-    }) as EventListener);
 
-  });
 </script>
 
 <ButtonGroup class="*:ring-primary-700!">
-  <Button color={colorButtonMultipleVocabulary}>Multiple Vocabulary</Button>
-  <Button color={colorButtonOutside}>Outside</Button>
-  <Button color={colorButtonSingleVocabulary}>Single Vocabulary</Button>
+  <Button onclick={()=>{changeNetworkEvent(multipleVocabHostName, normalNetworkHostName)}} >Multiple Vocabulary</Button>
+  <Button onclick={()=>{changeNetworkEvent(normalNetworkHostName, multipleVocabHostName)}}>Single Vocabulary</Button>
 </ButtonGroup>

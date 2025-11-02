@@ -8,7 +8,8 @@
         type WorkerErrorResponse,
         resetQueryState
     } from "$lib";
-    import { EVENT_TARGET, QUERY_STATE, RULES, PROPOSED_QUERY_EVENT, CHANGE_SCHEMA_ALIGNMENT_STATE } from "../state.svelte";
+    import { CHANGE_NETWORK_EVENT, EVENT_TARGET, QUERY_STATE, RULES, PROPOSED_QUERY_EVENT, CHANGE_SCHEMA_ALIGNMENT_STATE_EVENT, type IChangeNetwork, ALERT, AlertType } from "../state.svelte";
+
 
     type WorkerQueryResponse =
         | WorkerBindingResponse
@@ -57,6 +58,8 @@
               console.warn(`there was an error when performing the query ${data.result}`);
               QUERY_STATE.error = data.result;
               QUERY_STATE.queryIsRunning = false;
+              ALERT.type = AlertType.Error;
+              ALERT.message = `The query engine produce an error ${data.result}`;
               setYasqeBorderColor(originalBorderColor);
           } else {
               console.warn(`There was an unknown response ${data}`);
@@ -90,12 +93,36 @@
           }
         }) as EventListener);
 
-        EVENT_TARGET.addEventListener(CHANGE_SCHEMA_ALIGNMENT_STATE, ((e: CustomEvent<boolean>) => {
+        EVENT_TARGET.addEventListener(CHANGE_SCHEMA_ALIGNMENT_STATE_EVENT, ((e: CustomEvent<boolean>) => {
           schemaAlignment = e.detail;
+        }) as EventListener);
+
+        EVENT_TARGET.addEventListener(CHANGE_NETWORK_EVENT, ((e: CustomEvent<IChangeNetwork>)=>{
+          const {previousNetwork, newNetwork} = e.detail;
+          if(!yasqe){
+            console.warn("yasque is not yet instantiated");
+            return
+          }
+          const query:string = yasqe.getValue();
+
+          if(!query.includes(previousNetwork)){
+            ALERT.type = AlertType.Error;
+            ALERT.message = `The network ${previousNetwork} is not in the query`;
+            console.warn(ALERT.message);
+          }else{
+            const newQuery = query.replaceAll(previousNetwork, newNetwork);
+            yasqe.setValue(newQuery);
+            ALERT.type = AlertType.Info;
+            ALERT.message = "The network has changes.";
+            console.log(ALERT.message);
+          }
+
         }) as EventListener);
 
         yasqe.on("query", async (instance: YasqeType) => {
             if(QUERY_STATE.queryIsRunning === true){
+              ALERT.type = AlertType.Info;
+              ALERT.message = "The query was stopped by the user";
               console.log("stoping the query");
               QUERY_STATE.queryIsRunning = false;
               newWorker();
@@ -118,6 +145,7 @@
 </script>
 
 <div bind:this={yasguiDiv} class="editor" ></div>
+
 
 <style>
     .editor{
