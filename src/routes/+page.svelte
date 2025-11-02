@@ -3,9 +3,11 @@
     import ResultPanel from "../components/ResultPanel.svelte";
     import Options from "../components/Options.svelte";
     import RulePanel from "../components/RulePanel.svelte";
+    import Alert from "../components/Alert.svelte";
 </script>
 
 <div class="page">
+    <Alert />
     <div class="editor">
         <Editor />
         <RulePanel />
@@ -31,6 +33,7 @@
     .page{
         height: 100vh;
         display: flex;
+        overflow: hidden;
         flex-direction: column;
     }
     .result {

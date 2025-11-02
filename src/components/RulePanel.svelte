@@ -4,7 +4,7 @@
   import {EditorView} from "@codemirror/view";
   import {EditorState, Compartment} from "@codemirror/state";
   import { turtle } from 'codemirror-lang-turtle';
-  import {RULES, EVENT_TARGET, CHANGE_SCHEMA_ALIGNMENT_STATE} from "../state.svelte";
+  import {RULES, EVENT_TARGET, CHANGE_SCHEMA_ALIGNMENT_STATE_EVENT} from "../state.svelte";
 
   let editor: HTMLElement | undefined;
   const exampleRules = `@prefix ex: <https://exemple.com#> .
@@ -42,7 +42,7 @@ _:rule1
       ],
     });
 
-     EVENT_TARGET.addEventListener(CHANGE_SCHEMA_ALIGNMENT_STATE, ((e: CustomEvent<boolean>) => {
+     EVENT_TARGET.addEventListener(CHANGE_SCHEMA_ALIGNMENT_STATE_EVENT, ((e: CustomEvent<boolean>) => {
        view.dispatch({
                effects: readOnly.reconfigure(EditorState.readOnly.of(!e.detail))
              });
