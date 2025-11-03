@@ -2,15 +2,18 @@
   import { Button, Dropdown, DropdownItem } from "flowbite-svelte";
   import { ChevronDownOutline } from "flowbite-svelte-icons";
   import queriesNetwork from "../../example_queries/network.json?raw";
-  import { EVENT_TARGET, PROPOSED_QUERY_EVENT } from "../state.svelte";
+  import { EVENT_TARGET, PROPOSED_QUERY_EVENT, CHANGE_RULE_EVENT } from "../state.svelte";
 
   let isOpen = $state(false);
 
   const queries = JSON.parse(queriesNetwork);
 
   function changeQuery(description:string){
-    const event = new CustomEvent(PROPOSED_QUERY_EVENT, {"detail":queries[description]})
-    EVENT_TARGET.dispatchEvent(event);
+    const queryEvent = new CustomEvent(PROPOSED_QUERY_EVENT, {"detail":queries[description]})
+    EVENT_TARGET.dispatchEvent(queryEvent);
+
+    const ruleEvent = new CustomEvent(CHANGE_RULE_EVENT, {"detail":queries[description]["rules"]})
+    EVENT_TARGET.dispatchEvent(ruleEvent);
     isOpen = false;
   }
 
