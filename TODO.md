@@ -1,27 +1,28 @@
-# TODO
+## TODO
 
-## Deployment
+### Deployment
 - [ ] Host the web app on the virtual wall
-  - [ ] Make a script to manage the solidbench to adjust with the correct hostname
-  - [ ] Host on the virtual wall
+  - [ ] Make a script to manage the SolidBench hostname configuration
+  - [ ] Deploy on the virtual wall
 
-## UX/UI
-- [ ] Better UX/UI
+### UX/UI
+- [ ] Improve UX/UI
   - [ ] Layout
   - [ ] Colors
-  - [ ] Marketing
-    - [ ] Comunica
-    - [ ] Ugent/KNOWS
-  - [ ] Scenario presentation
+  - [ ] Marketing elements
+    - [ ] Comunica branding
+    - [ ] UGent/KNOWS branding
+    - [ ] Me :)
+  - [ ] Scenario presentation (popup when the demo start, with a flag on the local storage to show it once and a button to show it again)
   - [ ] Link to the open source version
-  - [ ] Number of HTTP request in the UI
-  - [ ] The alignment found in the UI
-  - [ ] The data model of solidbench
+  - [ ] Display number of HTTP requests in the UI
+  - [ ] Display alignments found in the UI
+  - [ ] Show the SolidBench data model
 
-## Content
-- [ ] Produce a video
-- [ ] Improve the readme of the NPM package
-- [ ] Add some screenshot in the readme
+### Content
+- [ ] Produce a demo video
+- [ ] Improve the NPM package README
+- [ ] Add screenshots to the README
 
-## Paper (CRITICAL)
+### Paper
 - [ ] Replace "TBD" demo URL with actual URL
