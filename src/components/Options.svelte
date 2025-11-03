@@ -3,6 +3,7 @@
     import SchemaAlignmentSwitch from "./SchemaAlignmentSwitch.svelte";
     import NetworkSwitch from "./NetworkSwitch.svelte";
     import ProposedRulesQueryButton from "./ProposedRulesQueryButton.svelte";
+    import InforPanel from "./InfoPanel.svelte";
 </script>
 
 <div class="options">
@@ -10,6 +11,7 @@
     <ProposedRulesQueryButton />
     <SchemaAlignmentSwitch />
     <NetworkSwitch />
+    <InforPanel />
 </div>
 
 <style>
@@ -19,7 +21,7 @@
       flex-direction: column;
       align-items: center;
       align-content: space-around;
-      row-gap: 10%;
+      row-gap: 5%;
       width: 80%;
       height: 100%;
     }
