@@ -21,7 +21,7 @@
 
 ### Content
 - [ ] Produce a demo video
-- [ ] Improve the NPM package README
+- [X] Improve the NPM package README
 - [ ] Add screenshots to the README
 
 ### Paper

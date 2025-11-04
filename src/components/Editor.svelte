@@ -51,6 +51,8 @@
           } else if (data.type === "end") {
             console.log(`query ended after ${data.result.execution_time}`);
               QUERY_STATE.executionTime = data.result.execution_time;
+              QUERY_STATE.numberOfHttpRequest = data.result.number_http_request;
+              QUERY_STATE.alignmentKg = data.result.alignment_kg;
               QUERY_STATE.queryIsRunning = false;
               setYasqeBorderColor(originalBorderColor);
 
