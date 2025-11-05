@@ -191,7 +191,7 @@ function reportResults(bindingsStream:BindingsStream, postFunction: (message:Wor
     });
     bindingsStream.on("end", () => {
       const endTime = performance.now();
-      const resultAlignmentKg = ruleSetsToKg(tracker.schemaAlignment);
+      const resultAlignmentKg = ruleSetsToKg(tracker.schemaAlignment, rulesKg);
       let alignment_kg = "";
       if(isError(resultAlignmentKg)){
         postFunction({ type: "error", result: resultAlignmentKg.error });
@@ -208,13 +208,15 @@ function reportResults(bindingsStream:BindingsStream, postFunction: (message:Wor
   });
 
 }
-function ruleSetsToKg(ruleSets: IRuleSet[]): Result<string, string>{
+
+function ruleSetsToKg(ruleSets: IRuleSet[], rulesKg: RDF.Quad[]): Result<string, string>{
   const writer = new N3Writer({prefixes:{
     semmap: SEM_MAP_PREFIX,
     owl: "http://www.w3.org/2002/07/owl#",
     rdfs: "http://www.w3.org/2000/01/rdf-schema#",
     skos: "http://www.w3.org/2004/02/skos/core#"
   }});
+  writer.addQuads(rulesKg);
 
   let serializedKg: string = "";
   let serializedError: string | undefined = undefined;
