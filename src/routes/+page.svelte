@@ -4,6 +4,7 @@
     import Options from "../components/Options.svelte";
     import RulePanel from "../components/RulePanel.svelte";
     import Alert from "../components/Alert.svelte";
+    import Footer from "../components/Footer.svelte";
 </script>
 
 <div class="page">
@@ -16,6 +17,7 @@
       <div class="result"><ResultPanel /></div>
       <div class="options"><Options /></div>
     </div>
+    <Footer/>
 </div>
 
 <style>

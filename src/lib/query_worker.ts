@@ -4,22 +4,44 @@ import type * as RDF from "@rdfjs/types";
 import {
   type WorkerMessage,
   type WorkerResponse,
-  type WorkerBindingResponse
+  type WorkerEndResponse,
+  type WorkerBindingResponse,
+  type IReportedResults,
+  type WorkerErrorResponse
 } from "$lib";
 import type { BindingsStream } from "@comunica/types";
 import {
   type SafePromise,
+  type Result,
   error,
   result,
   isError,
 } from "result-interface";
-import { Parser as N3Parser, Store } from "n3";
+import { Parser as N3Parser, Store, Writer as N3Writer } from "n3";
 import { DataFactory } from 'rdf-data-factory';
+
+const SEM_MAP_PREFIX = "https://semanticmapping.org/vocab#";
 
 const DF = new DataFactory<RDF.BaseQuad>();
 const ENGINE = new QueryEngine();
 const LOCAL_ENGINE = new LocalQueryEngine();
 const RDF_PARSER = new N3Parser();
+
+interface IRuleSet {
+  subweb: string;
+  rules: IRule[];
+}
+
+interface IRule {
+  premise: RDF.Term;
+  inference: RDF.Term;
+  conclusion: RDF.Term;
+}
+
+interface ITrackedInfo{
+  links: string[],
+  schemaAlignment: IRuleSet[]
+}
 
 // Listen for messages from the main thread
 self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
@@ -31,21 +53,22 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
         const { query, rules:serializedRules, schemaAlignment } = data.payload;
         const rulesResponse = await convertRules(serializedRules);
         if(isError(rulesResponse)){
-          response = { type:"error", result: `the rules are malformed: ${rulesResponse.error}`};
+          response = <WorkerErrorResponse> { type:"error", result: `the rules are malformed: ${rulesResponse.error}`};
           break;
         }
-        const { value: [rules, disallowedRules] } = rulesResponse;
-        const bindingStreamResult = await executeQuery(query, rules, disallowedRules, schemaAlignment);
-        const executionTimeResult = await reportResults(bindingStreamResult, self.postMessage);
-        if(isError(executionTimeResult)){
-          response = { type:"error", result: `there was an error in the query: ${executionTimeResult.error}`};
+      const { value: { rules, disallowedRules, rulesKg} } = rulesResponse;
+        const tracker: ITrackedInfo = { links: [], schemaAlignment: [] };
+        const bindingStreamResult = await executeQuery(query, rules, disallowedRules, schemaAlignment, tracker);
+        const resultReport = await reportResults(bindingStreamResult, self.postMessage, rulesKg, tracker);
+        if(isError(resultReport)){
+          response = <WorkerErrorResponse> { type:"error", result: `there was an error in the query: ${resultReport.error}`};
           break;
         }
-        response = {type:"end", result:{execution_time:executionTimeResult.value}}
+        response = <WorkerEndResponse> {type:"end", result:resultReport.value}
         break;
       }
     default:
-      response = { type:"error", result: "unknown message type"};
+      response = <WorkerErrorResponse> { type:"error", result: "unknown message type"};
       console.warn("Unknown message type", data);
   }
   self.postMessage(response);
@@ -53,14 +76,16 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
 
  async function convertRules(
   rulesKg: string,
-): SafePromise<[Map<string, RDF.Quad[]>, string[]], string> {
+ ): SafePromise<{rules:Map<string, RDF.Quad[]>, disallowedRules:string[], rulesKg: RDF.Quad[]}, string> {
   const resp: Map<string, RDF.Quad[]> = new Map();
    let errorOrUndefined: string|undefined = undefined ;
    const disallowedRules: string[] = [];
    const store = new Store();
+   const ruleKgParsed: RDF.Quad[] = [];
 
    RDF_PARSER.parse(rulesKg, (error:Error|undefined, quad)=>{
      if(quad){
+       ruleKgParsed.push(quad);
        store.addQuad(quad);
      }else if(error){
        errorOrUndefined = error.message;
@@ -133,38 +158,112 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
    if(errorOrUndefined !== undefined){
      return error(errorOrUndefined);
    }
-  return result([resp, Array.from(new Set(disallowedRules))]);
+
+  return result({rules:resp, disallowedRules, rulesKg:ruleKgParsed});
 }
 
 async function executeQuery(
   query: string,
   rules: Map<string, RDF.Quad[]>,
   disallowedRules: string[],
-  schemaAlignment:boolean
+  schemaAlignment:boolean,
+  tracker: ITrackedInfo
 ): Promise<BindingsStream> {
   const bindingsStream = await ENGINE.queryBindings(query, {
     lenient: true,
     "@comunica/actor-context-preprocess-query-source-reasoning:rules": rules,
     "@comunica/actor-context-preprocess-query-source-reasoning:disallowedOnlineRules":disallowedRules,
     "@comunica/actor-context-preprocess-query-source-reasoning:activate": schemaAlignment,
+    '@comunica/actor-context-preprocess-query-source-reasoning:runtimeInfo': tracker,
   });
   return bindingsStream;
 }
 
-function reportResults(bindingsStream:BindingsStream, postFunction: (message:WorkerBindingResponse)=>void):SafePromise<number, string>{
+function reportResults(bindingsStream:BindingsStream, postFunction: (message:WorkerBindingResponse|WorkerErrorResponse)=>void, rulesKg: RDF.Quad[],tracker: ITrackedInfo):SafePromise<IReportedResults, string>{
   const startTime = performance.now();
-  return new Promise((resolve)=>{
+  return new Promise((resolve) => {
     bindingsStream.on("data", (binding: RDF.Bindings) => {
-      postFunction({type:"binding", result: binding.toString()});
+      postFunction({ type: "binding", result: binding.toString() });
     });
 
     bindingsStream.on("error", (err: Error) => {
       resolve(error(err.message));
     });
-    bindingsStream.on("end", ()=>{
+    bindingsStream.on("end", () => {
       const endTime = performance.now();
-      resolve(result(endTime - startTime));
+      const resultAlignmentKg = ruleSetsToKg(tracker.schemaAlignment);
+      let alignment_kg = "";
+      if(isError(resultAlignmentKg)){
+        postFunction({ type: "error", result: resultAlignmentKg.error });
+      }else{
+        alignment_kg = resultAlignmentKg.value;
+      }
+      const resp: IReportedResults = {
+        execution_time: endTime - startTime,
+        number_http_request: tracker.links.length,
+        alignment_kg,
+      };
+      resolve(result(resp));
     })
-  })
+  });
 
+}
+function ruleSetsToKg(ruleSets: IRuleSet[]): Result<string, string>{
+  const writer = new N3Writer({prefixes:{
+    semmap: SEM_MAP_PREFIX,
+    owl: "http://www.w3.org/2002/07/owl#",
+    rdfs: "http://www.w3.org/2000/01/rdf-schema#",
+    skos: "http://www.w3.org/2004/02/skos/core#"
+  }});
+
+  let serializedKg: string = "";
+  let serializedError: string | undefined = undefined;
+
+  for(const ruleSet of ruleSets){
+    ruleSetToKg(ruleSet, writer);
+  }
+
+  writer.end((err, result) => {
+    if(result){
+      serializedKg = result;
+    }else{
+      serializedError = err.message;
+    }
+  });
+
+  if(serializedError!==undefined){
+    return error(serializedError);
+  }
+  return result(serializedKg);
+}
+
+function ruleSetToKg(ruleSet: IRuleSet, writer: N3Writer): void{
+  const ruleSetNode = DF.blankNode();
+  const declaration = <RDF.Quad>DF.quad(ruleSetNode, DF.namedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), DF.namedNode(`${SEM_MAP_PREFIX}RuleSet`));
+  const subwebQuad = <RDF.Quad> DF.quad(ruleSetNode,  DF.namedNode(`${SEM_MAP_PREFIX}subweb`), DF.literal(ruleSet.subweb));
+
+  const kg:RDF.Quad[] = [
+    declaration,
+    subwebQuad
+  ];
+
+  for(const rule of ruleSet.rules){
+    const node = DF.blankNode();
+    const ruleDeclation = <RDF.Quad> DF.quad(ruleSetNode, DF.namedNode(`${SEM_MAP_PREFIX}rule`), node);
+    kg.push(ruleDeclation);
+    const ruleKg = <RDF.Quad[]> ruleToKg(rule, node);
+    kg.push(...ruleKg);
+  }
+
+  writer.addQuads(kg);
+
+}
+
+function ruleToKg(rule: IRule, node: RDF.BlankNode): RDF.BaseQuad[]{
+  const kg = [
+    DF.quad(node, DF.namedNode(`${SEM_MAP_PREFIX}premise`), rule.premise),
+    DF.quad(node, DF.namedNode(`${SEM_MAP_PREFIX}inference`), rule.inference),
+    DF.quad(node, DF.namedNode(`${SEM_MAP_PREFIX}conclusion`), rule.conclusion),
+  ]
+  return kg;
 }

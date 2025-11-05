@@ -16,6 +16,7 @@
     # Defines where the rules apply. "*" means the rules are valid for all subwebs.
     semmap:subweb "*" ;
     # Lists any rules disable by the engine.
+    # See https://mapping-commons.github.io/sssom/spec-model/ for the list of all the valid rules.
     semmap:disallowedRules (ex:randomAlignment) ;
     # Declares the rules included in this rule set.
     semmap:rule _:rule1 .
@@ -24,6 +25,7 @@ _:rule1
     # RDF term that serves as the starting point for the alignment.
     semmap:premise ex:foo ;
     # The semantic relationship between the premise and conclusion.
+    # See https://mapping-commons.github.io/sssom/spec-model/ for the list of all the valid rules.
     semmap:inference skos:exactMatch ;
     # RDF term that the premise is aligned to.
     semmap:conclusion ex:bar .

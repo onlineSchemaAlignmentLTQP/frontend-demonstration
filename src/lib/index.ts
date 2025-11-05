@@ -1,11 +1,18 @@
 // place files you want to import through the `$lib` alias in this folder.
 
+export interface IReportedResults{
+  execution_time: number,
+  number_http_request: number,
+  alignment_kg: string
+}
 
 export interface IQueryState{
   queryIsRunning:boolean;
   error:string|undefined;
   results:Record<string, string>[];
-  executionTime: number|undefined
+  executionTime: number | undefined;
+  numberOfHttpRequest: number | undefined;
+  alignmentKg: string | undefined;
 };
 
 export function emptyQueryState(): IQueryState{
@@ -13,7 +20,9 @@ export function emptyQueryState(): IQueryState{
     queryIsRunning: false,
     error: undefined,
     results: [],
-    executionTime: undefined
+    executionTime: undefined,
+    numberOfHttpRequest:undefined,
+    alignmentKg: undefined
   };
 }
 export function resetQueryState(queryState:IQueryState):void{
@@ -21,6 +30,8 @@ export function resetQueryState(queryState:IQueryState):void{
   queryState.error = undefined;
   queryState.results = [];
   queryState.executionTime = undefined;
+  queryState.numberOfHttpRequest = undefined;
+  queryState.alignmentKg = undefined;
 }
 
 export interface WorkerMessage {
@@ -48,9 +59,7 @@ export interface WorkerBindingResponse {
 }
 export interface WorkerEndResponse {
   type: "end";
-  result: {
-    execution_time:number
-  };
+  result: IReportedResults;
 }
 
 export interface WorkerErrorResponse {
