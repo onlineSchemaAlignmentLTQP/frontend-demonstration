@@ -26,12 +26,6 @@ const DF = new DataFactory<RDF.BaseQuad>();
 const ENGINE = new QueryEngine();
 const LOCAL_ENGINE = new LocalQueryEngine();
 const RDF_PARSER = new N3Parser();
-const RDF_WRITER = new N3Writer({prefixes:{
-  semmap: SEM_MAP_PREFIX,
-  owl: "http://www.w3.org/2002/07/owl#",
-  rdfs: "http://www.w3.org/2000/01/rdf-schema#",
-  skos: "http://www.w3.org/2004/02/skos/core#"
-}});
 
 interface IRuleSet {
   subweb: string;
@@ -62,10 +56,10 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
           response = <WorkerErrorResponse> { type:"error", result: `the rules are malformed: ${rulesResponse.error}`};
           break;
         }
-        const { value: [rules, disallowedRules] } = rulesResponse;
+      const { value: { rules, disallowedRules, rulesKg} } = rulesResponse;
         const tracker: ITrackedInfo = { links: [], schemaAlignment: [] };
         const bindingStreamResult = await executeQuery(query, rules, disallowedRules, schemaAlignment, tracker);
-        const resultReport = await reportResults(bindingStreamResult, self.postMessage, tracker);
+        const resultReport = await reportResults(bindingStreamResult, self.postMessage, rulesKg, tracker);
         if(isError(resultReport)){
           response = <WorkerErrorResponse> { type:"error", result: `there was an error in the query: ${resultReport.error}`};
           break;
@@ -82,14 +76,16 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
 
  async function convertRules(
   rulesKg: string,
-): SafePromise<[Map<string, RDF.Quad[]>, string[]], string> {
+ ): SafePromise<{rules:Map<string, RDF.Quad[]>, disallowedRules:string[], rulesKg: RDF.Quad[]}, string> {
   const resp: Map<string, RDF.Quad[]> = new Map();
    let errorOrUndefined: string|undefined = undefined ;
    const disallowedRules: string[] = [];
    const store = new Store();
+   const ruleKgParsed: RDF.Quad[] = [];
 
    RDF_PARSER.parse(rulesKg, (error:Error|undefined, quad)=>{
      if(quad){
+       ruleKgParsed.push(quad);
        store.addQuad(quad);
      }else if(error){
        errorOrUndefined = error.message;
@@ -162,7 +158,8 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
    if(errorOrUndefined !== undefined){
      return error(errorOrUndefined);
    }
-  return result([resp, Array.from(new Set(disallowedRules))]);
+
+  return result({rules:resp, disallowedRules, rulesKg:ruleKgParsed});
 }
 
 async function executeQuery(
@@ -182,7 +179,7 @@ async function executeQuery(
   return bindingsStream;
 }
 
-function reportResults(bindingsStream:BindingsStream, postFunction: (message:WorkerBindingResponse|WorkerErrorResponse)=>void, tracker: ITrackedInfo):SafePromise<IReportedResults, string>{
+function reportResults(bindingsStream:BindingsStream, postFunction: (message:WorkerBindingResponse|WorkerErrorResponse)=>void, rulesKg: RDF.Quad[],tracker: ITrackedInfo):SafePromise<IReportedResults, string>{
   const startTime = performance.now();
   return new Promise((resolve) => {
     bindingsStream.on("data", (binding: RDF.Bindings) => {
@@ -212,40 +209,21 @@ function reportResults(bindingsStream:BindingsStream, postFunction: (message:Wor
 
 }
 function ruleSetsToKg(ruleSets: IRuleSet[]): Result<string, string>{
-  let kg = "";
+  const writer = new N3Writer({prefixes:{
+    semmap: SEM_MAP_PREFIX,
+    owl: "http://www.w3.org/2002/07/owl#",
+    rdfs: "http://www.w3.org/2000/01/rdf-schema#",
+    skos: "http://www.w3.org/2004/02/skos/core#"
+  }});
+
+  let serializedKg: string = "";
+  let serializedError: string | undefined = undefined;
+
   for(const ruleSet of ruleSets){
-    const kgRuleSetResult = ruleSetToKg(ruleSet);
-    if(isError(kgRuleSetResult)){
-      return kgRuleSetResult;
-    }
-    kg = kg + `\n\n${kgRuleSetResult.value}`;
-  }
-  return result(kg);
-}
-
-function ruleSetToKg(ruleSet: IRuleSet): Result<string, string>{
-  const ruleSetNode = DF.blankNode();
-  const declaration = <RDF.Quad>DF.quad(ruleSetNode, DF.namedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), DF.namedNode(`${SEM_MAP_PREFIX}RuleSet`));
-  const subwebQuad = <RDF.Quad> DF.quad(ruleSetNode,  DF.namedNode(`${SEM_MAP_PREFIX}subweb`), DF.literal(ruleSet.subweb));
-
-  const kg:RDF.Quad[] = [
-    declaration,
-    subwebQuad
-  ];
-
-  for(const [i, rule] of ruleSet.rules.entries()){
-    const node = DF.blankNode(`rule_${i}`);
-    const ruleDeclation = <RDF.Quad> DF.quad(ruleSetNode, DF.namedNode(`${SEM_MAP_PREFIX}rule`), node);
-    kg.push(ruleDeclation);
-    const ruleKg = <RDF.Quad[]> ruleToKg(rule, node);
-    kg.push(...ruleKg);
+    ruleSetToKg(ruleSet, writer);
   }
 
-  let serializedKg: string | undefined;
-  let serializedError: string | undefined;
-
-  RDF_WRITER.addQuads(kg);
-  RDF_WRITER.end((err, result) => {
+  writer.end((err, result) => {
     if(result){
       serializedKg = result;
     }else{
@@ -257,6 +235,28 @@ function ruleSetToKg(ruleSet: IRuleSet): Result<string, string>{
     return error(serializedError);
   }
   return result(serializedKg);
+}
+
+function ruleSetToKg(ruleSet: IRuleSet, writer: N3Writer): void{
+  const ruleSetNode = DF.blankNode();
+  const declaration = <RDF.Quad>DF.quad(ruleSetNode, DF.namedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), DF.namedNode(`${SEM_MAP_PREFIX}RuleSet`));
+  const subwebQuad = <RDF.Quad> DF.quad(ruleSetNode,  DF.namedNode(`${SEM_MAP_PREFIX}subweb`), DF.literal(ruleSet.subweb));
+
+  const kg:RDF.Quad[] = [
+    declaration,
+    subwebQuad
+  ];
+
+  for(const rule of ruleSet.rules){
+    const node = DF.blankNode();
+    const ruleDeclation = <RDF.Quad> DF.quad(ruleSetNode, DF.namedNode(`${SEM_MAP_PREFIX}rule`), node);
+    kg.push(ruleDeclation);
+    const ruleKg = <RDF.Quad[]> ruleToKg(rule, node);
+    kg.push(...ruleKg);
+  }
+
+  writer.addQuads(kg);
+
 }
 
 function ruleToKg(rule: IRule, node: RDF.BlankNode): RDF.BaseQuad[]{
