@@ -18,9 +18,7 @@
     let yasguiDiv: HTMLElement | undefined;
     let yasqe: YasqeType | undefined;
     let worker: Worker;
-    const originalBorderColor = "#d1d1d1";
-    const queryRunningBorderColor = "green";
-    const queryStopBorderColor = "red";
+
     let schemaAlignment = true;
 
     function newWorker():void{
@@ -54,7 +52,6 @@
               QUERY_STATE.numberOfHttpRequest = data.result.number_http_request;
               QUERY_STATE.alignmentKg = data.result.alignment_kg;
               QUERY_STATE.queryIsRunning = false;
-              setYasqeBorderColor(originalBorderColor);
 
           } else if (data.type === "error") {
               console.warn(`there was an error when performing the query ${data.result}`);
@@ -62,18 +59,10 @@
               QUERY_STATE.queryIsRunning = false;
               ALERT.type = AlertType.Error;
               ALERT.message = `The query engine produce an error ${data.result}`;
-              setYasqeBorderColor(originalBorderColor);
           } else {
               console.warn(`There was an unknown response ${data}`);
           }
       };
-    }
-
-    function setYasqeBorderColor(color:string):void{
-      const yasqeElement:HTMLElement|null = document.querySelector('.yasqe .CodeMirror');
-      if(yasqeElement){
-        yasqeElement.style.borderColor = color;
-      }
     }
 
     onMount(async () => {
@@ -128,12 +117,10 @@
               console.log("stoping the query");
               QUERY_STATE.queryIsRunning = false;
               newWorker();
-              setYasqeBorderColor(queryStopBorderColor);
               return;
             }
             console.log(`starting the query ${schemaAlignment?"with schema alignment":""} `);
             resetQueryState(QUERY_STATE);
-            setYasqeBorderColor(queryRunningBorderColor);
             QUERY_STATE.queryIsRunning = true;
             const query = instance.getValue();
 

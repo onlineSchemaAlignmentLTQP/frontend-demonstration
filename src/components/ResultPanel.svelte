@@ -1,5 +1,6 @@
 <script lang="ts">
     import { QUERY_STATE } from "../state.svelte";
+    import { Spinner } from "flowbite-svelte";
     import BindingsEntry from "./BindingsEntry.svelte";
 
 
@@ -39,13 +40,23 @@
 
 <div class="result-panel">
     {#if QUERY_STATE.error === undefined}
+        <!-- spinner moved into the results area so selections/scrolling remain interactive -->
+
         <div class="bindings-entries">
+            {#if QUERY_STATE.queryIsRunning}
+                <div class="spinner-overlay" aria-hidden="true">
+                    <div class="spinner-backdrop" role="status" aria-live="polite">
+                        <Spinner color="red" size="8" />
+                    </div>
+                </div>
+            {/if}
             {#each QUERY_STATE.results as result, i (i)}
                 <div class="bindings-entry">
                     <BindingsEntry bindings={result} />
                 </div>
             {/each}
         </div>
+
         <div class="meta-result">
             {QUERY_STATE.results.length} result(s) {executionTime} {numberHttpRequests} {#if QUERY_STATE.alignmentKg !== undefined}
                 <button  onclick={schemaAlignmentEvent} style="color: #0000EE;text-decoration: underline;">see online alignment KG</button>
@@ -60,20 +71,29 @@
     :global(.cm-editor){
         height: 100%;
     }
+
     .meta-result{
+        display: flex;
         margin-top: 1%;
         margin-left: 2%;
         height: 100%;
     }
 
+    /* Make the panel a positioned container so overlay can be centered */
     .result-panel{
+        position: relative;
         border: 1px solid #d1d1d1;
         height: 100%;
+        overflow: hidden;
     }
+
     .bindings-entries{
-        height: 90%;
+        height: calc(100% - 3.5rem);
         overflow: auto;
+        padding: 0.5rem;
+        position: relative; /* position overlay relative to the scrollable results area */
     }
+
     .bindings-entry {
         margin-bottom: 1%;
         border-radius: 10px;
@@ -81,5 +101,33 @@
 
     .bindings-entry:hover {
         background-color: #be1622;
+    }
+
+    .spinner-overlay {
+        position: absolute;
+        inset: 0; /* cover the scrollable results area */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent; /* visual backdrop is provided by the inner backdrop only */
+        z-index: 60;
+        pointer-events: none; /* allow pointer events (selection / scroll) to pass through to results */
+    }
+
+    .spinner-backdrop {
+        background: rgba(255,255,255,0.95);
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none; /* spinner itself shouldn't intercept pointer events */
+        user-select: none; /* don't accidentally select spinner markup while selecting text */
+    }
+
+    @media (max-width: 480px) {
+        .spinner-backdrop { padding: 0.5rem; }
+        .bindings-entries{ height: calc(100% - 3.2rem); }
     }
 </style>
