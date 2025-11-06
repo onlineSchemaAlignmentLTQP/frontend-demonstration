@@ -1,5 +1,5 @@
-- [ ] Make a tab for my option button
-- [ ] Add an overlay to the tab
+- [X] Make a tab for my option button
+- [X] Add an overlay to the tab
 
 - [ ] Add a title to the code box
 

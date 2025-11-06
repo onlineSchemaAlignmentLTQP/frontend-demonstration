@@ -19,6 +19,6 @@
 </script>
 
 <ButtonGroup class="*:ring-primary-700!">
-  <Button onclick={()=>{changeNetworkEvent(multipleVocabHostName, normalNetworkHostName)}} >Multiple Vocabulary</Button>
-  <Button onclick={()=>{changeNetworkEvent(normalNetworkHostName, multipleVocabHostName)}}>Single Vocabulary</Button>
+  <Button onclick={()=>{changeNetworkEvent(multipleVocabHostName, normalNetworkHostName)}} >Convert to Multiple Vocab Network</Button>
+  <Button onclick={()=>{changeNetworkEvent(normalNetworkHostName, multipleVocabHostName)}}>Convert to Single Vocab Network</Button>
 </ButtonGroup>
