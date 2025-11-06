@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Alert } from "flowbite-svelte";
+  import { Toast } from "flowbite-svelte";
   import { InfoCircleSolid } from "flowbite-svelte-icons";
   import { ALERT, AlertType } from "../state.svelte";
   import { fade } from 'svelte/transition';
@@ -33,10 +33,20 @@
 </script>
 
 {#if visible}
-    <div out:fade={{ duration: 500 }}>
-        <Alert color={color}>
+    <div out:fade={{ duration: 500 }} class="toast">
+        <Toast color={color}>
           {#snippet icon()}<InfoCircleSolid class="h-5 w-5" />{/snippet}
           {ALERT.message}
-        </Alert>
+        </Toast>
     </div>
 {/if}
+
+<style>
+    .toast{
+        position: fixed;
+        top: 30%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 9999;
+    }
+</style>

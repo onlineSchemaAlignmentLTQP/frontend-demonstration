@@ -14,11 +14,10 @@
     - [ ] UGent/KNOWS branding
     - [ ] Me :)
   - [ ] Scenario presentation (popup when the demo start, with a flag on the local storage to show it once and a button to show it again)
-  - [ ] Link to the open source version
+  - [X] Link to the open source version
   - [X] Display number of HTTP requests in the UI
   - [X] Display alignments found in the UI
   - [X] Show the SolidBench data model
-
 ### Content
 - [ ] Produce a demo video
 - [X] Improve the NPM package README
