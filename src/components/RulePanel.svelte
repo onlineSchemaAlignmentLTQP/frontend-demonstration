@@ -40,6 +40,7 @@ _:rule1
     if (storedRules!== null) {
       initialRules = storedRules;
     }
+    RULES.kg = initialRules;
      const view = new EditorView({
       doc:  initialRules,
       parent: editor!,
@@ -85,7 +86,7 @@ _:rule1
 
 <style>
     .editor{
-        width: 40%;
+        width: 50%;
         height: 100%;
         border: 1px solid #d1d1d1;
     }

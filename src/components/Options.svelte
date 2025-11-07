@@ -7,7 +7,7 @@
     import InfoPanel from "./InfoPanel.svelte";
 </script>
 
-<div>
+<div class="option-panel">
     <Tabs>
     <Tooltip triggeredBy="#proposed-queries">Proposed queries for demonstration</Tooltip>
      <TabItem id="proposed-queries" open title="Proposed Queries">

@@ -70,7 +70,7 @@
 
         const Yasqe = (await import("@triply/yasqe")).default;
         yasqe = new Yasqe(yasguiDiv!, {
-            showQueryButton: true,
+            showQueryButton: false,
             createShareableLink:false,
             resizeable:false,
         });
@@ -109,37 +109,77 @@
           }
 
         }) as EventListener);
-
-        yasqe.on("query", async (instance: YasqeType) => {
-            if(QUERY_STATE.queryIsRunning === true){
-              ALERT.type = AlertType.Info;
-              ALERT.message = "The query was stopped by the user";
-              console.log("stoping the query");
-              QUERY_STATE.queryIsRunning = false;
-              newWorker();
-              return;
-            }
-            console.log(`starting the query ${schemaAlignment?"with schema alignment":""} `);
-            resetQueryState(QUERY_STATE);
-            QUERY_STATE.queryIsRunning = true;
-            const query = instance.getValue();
-
-            const message: WorkerQueryMessage = {
-                type: "query",
-                payload: { query, rules: RULES.kg, schemaAlignment },
-            };
-            worker.postMessage(message);
-        });
     });
+
+    function runQuery(){
+      if(QUERY_STATE.queryIsRunning === true){
+        return;
+      }
+      console.log(`starting the query ${schemaAlignment?"with schema alignment":""} `);
+      resetQueryState(QUERY_STATE);
+      QUERY_STATE.queryIsRunning = true;
+      const query = yasqe!.getValue();
+
+      const message: WorkerQueryMessage = {
+          type: "query",
+          payload: { query, rules: RULES.kg, schemaAlignment },
+      };
+      worker.postMessage(message);
+    }
+
+    function stopQuery(){
+      if(QUERY_STATE.queryIsRunning === true){
+        QUERY_STATE.queryIsRunning = false;
+        newWorker();
+        return;
+      }
+    }
 </script>
-
-<div bind:this={yasguiDiv} class="editor" ></div>
-
+    <div style="width:100%; height:50vh; position:relative;">
+        <div bind:this={yasguiDiv} class="editor" ></div>
+        <div class="exec-buttons">
+            <button class={`exec-btn ${QUERY_STATE.queryIsRunning?"activated":""}`} on:click={runQuery}>Execute Query</button>
+            <button class="exec-btn" on:click={stopQuery}>Stop Query</button>
+        </div>
+    </div>
 
 <style>
+    .exec-buttons{
+        position: absolute;
+        z-index: 999;
+        right: 1rem;
+        bottom: 1.5rem;
+        display: flex;
+        gap: 0.5rem;
+        padding: 0.25rem;
+        background: transparent;
+    }
+
+    .exec-btn{
+        background: var(--color-comunica-red);
+        border: none;
+        color: white;
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+        transition: box-shadow 150ms ease, transform 150ms ease;
+    }
+
+    .activated,  .exec-buttons .exec-btn:hover{
+        box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+        transform: translateY(-2px);
+    }
+
+    .activated{
+        transform: translateY(-7px);
+    }
+
+
     .editor{
          height: 100%;
-         width: 60%;
+         width: 100%;
     }
     :global(.yasqe){
         height: 100%;

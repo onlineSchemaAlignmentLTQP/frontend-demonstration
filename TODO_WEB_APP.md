@@ -11,7 +11,7 @@
 
 - [ ] Make the red of the background when I hover the result lighter
 
-- [ ] Fix the bug of the footer that disapear
+- [X] Fix the bug of the footer that disapear
 
 - [ ] Underline my name in the footer
 - [ ] Demo mode
