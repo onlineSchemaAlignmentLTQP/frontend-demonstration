@@ -38,7 +38,7 @@
 
   /* Top area: Editor and RulePanel side-by-side, occupying maximum space with no gap */
   .editor {
-    height: 50%;
+    height: 100%;
     display: flex;
     flex-direction: row;
     gap: 0;
@@ -61,23 +61,9 @@
     overflow: hidden;
   }
 
-  /* Ensure the child component root in each column fills the available space and can scroll internally */
-  .editor-col > * {
-    flex: 1 1 0;
-    min-height: 0;
-    min-width: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    margin: 0;
-    padding: 0;
-    overflow: auto;
-  }
-
   /* Lower area takes the remaining 50% */
   .lower-interface {
-    height: 50%;
+    height: 40%;
     display: flex;
     flex-direction: row;
     width: auto;
@@ -97,13 +83,5 @@
     align-items: center;
     border: 1px solid #d1d1d1;
     overflow: auto;
-  }
-
-  /* Small utility: ensure internal editors can scroll if needed */
-  .editor-col :global(.editor),
-  .editor-col :global(.cm-editor) {
-    width: 100%;
-    height: 100%;
-    min-height: 0;
   }
 </style>

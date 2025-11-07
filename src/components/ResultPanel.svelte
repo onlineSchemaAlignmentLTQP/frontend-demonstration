@@ -55,9 +55,8 @@
       {QUERY_STATE.results.length} result(s) {executionTime}
       {numberHttpRequests}
       {#if QUERY_STATE.alignmentKg !== undefined}
-        <button onclick={schemaAlignmentEvent} style="color: #0000EE;text-decoration: underline;"
-          >see online alignment KG</button
-        >
+        <button onclick={schemaAlignmentEvent} style="color: #0000EE;text-decoration: underline;padding:0px; margin:0px;"
+          >see online alignment KG</button>
       {/if}
     </div>
   {:else}
@@ -66,12 +65,13 @@
 </div>
 
 <style>
-  :global(.cm-editor) {
-    height: 100%;
-  }
+
 
   .meta-result {
     display: flex;
+    flex-direction: row;
+    align-items: start;
+    gap: 1em;
     margin-top: 1%;
     margin-left: 2%;
     height: 100%;
@@ -122,14 +122,5 @@
     justify-content: center;
     pointer-events: none; /* spinner itself shouldn't intercept pointer events */
     user-select: none; /* don't accidentally select spinner markup while selecting text */
-  }
-
-  @media (max-width: 480px) {
-    .spinner-backdrop {
-      padding: 0.5rem;
-    }
-    .bindings-entries {
-      height: calc(100% - 3.2rem);
-    }
   }
 </style>

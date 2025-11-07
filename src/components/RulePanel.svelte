@@ -91,7 +91,7 @@ _:rule1
 
 <style>
   .editor {
-    width: 50%;
+    width: 100%;
     height: 100%;
     border: 1px solid #d1d1d1;
   }
