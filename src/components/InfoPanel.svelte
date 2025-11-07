@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ButtonGroup, Modal, Button} from "flowbite-svelte";
+  import { ButtonGroup, Modal, Button, Tooltip} from "flowbite-svelte";
   import configFile from "../../config.json?raw";
 
   const config = JSON.parse(configFile);
@@ -11,7 +11,11 @@
 </script>
 
 <ButtonGroup >
-  <Button style="
+    <Tooltip triggeredBy="#multiple-vocab-btn">Open a file explorer in a new tab with presenting the newtwork using multiple vocabularies</Tooltip>
+    <Tooltip triggeredBy="#single-vocab-btn">Open a file explorer in a new tab with presenting the newtwork using a single vocabulary</Tooltip>
+    <Tooltip triggeredBy="#data-model-btn">Open a modal showing SolidBench data model</Tooltip>
+
+  <Button id="multiple-vocab-btn" style="
   background: var(--color-comunica-red);
   border: solid black 1px;
   color: white;
@@ -21,7 +25,8 @@
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(0,0,0,0.12);
   " onclick={()=>{window.open(multipleVocabHostName, "_blank", "noopener,noreferrer")}} >Multiple Vocab Network</Button>
-  <Button style="
+
+  <Button id="data-model-btn" style="
   background: var(--color-comunica-red);
   border: solid black 1px;
   color: white;
@@ -31,7 +36,8 @@
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(0,0,0,0.12);
   " onclick={()=>{dataModelModal=true}} >Data Model</Button>
-  <Button style="
+
+  <Button id="single-vocab-btn" style="
   background: var(--color-comunica-red);
   border: solid black 1px;
   color: white;
