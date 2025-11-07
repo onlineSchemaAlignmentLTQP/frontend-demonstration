@@ -1,31 +1,31 @@
 // place files you want to import through the `$lib` alias in this folder.
 
-export interface IReportedResults{
-  execution_time: number,
-  number_http_request: number,
-  alignment_kg: string
+export interface IReportedResults {
+  execution_time: number;
+  number_http_request: number;
+  alignment_kg: string;
 }
 
-export interface IQueryState{
-  queryIsRunning:boolean;
-  error:string|undefined;
-  results:Record<string, string>[];
+export interface IQueryState {
+  queryIsRunning: boolean;
+  error: string | undefined;
+  results: Record<string, string>[];
   executionTime: number | undefined;
   numberOfHttpRequest: number | undefined;
   alignmentKg: string | undefined;
-};
+}
 
-export function emptyQueryState(): IQueryState{
+export function emptyQueryState(): IQueryState {
   return {
     queryIsRunning: false,
     error: undefined,
     results: [],
     executionTime: undefined,
-    numberOfHttpRequest:undefined,
-    alignmentKg: undefined
+    numberOfHttpRequest: undefined,
+    alignmentKg: undefined,
   };
 }
-export function resetQueryState(queryState:IQueryState):void{
+export function resetQueryState(queryState: IQueryState): void {
   queryState.queryIsRunning = false;
   queryState.error = undefined;
   queryState.results = [];
@@ -33,8 +33,6 @@ export function resetQueryState(queryState:IQueryState):void{
   queryState.numberOfHttpRequest = undefined;
   queryState.alignmentKg = undefined;
 }
-
-
 
 export interface WorkerQueryPayload {
   query: string;
@@ -61,7 +59,7 @@ export interface WorkerEndResponse extends WorkerResponse<IReportedResults> {
   result: IReportedResults;
 }
 
-export interface WorkerErrorResponse extends WorkerResponse<string>{
+export interface WorkerErrorResponse extends WorkerResponse<string> {
   type: "error";
   result: string;
 }

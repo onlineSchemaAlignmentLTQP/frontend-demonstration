@@ -43,7 +43,9 @@
   --color-comunica-red: #be1622;
 }
 
-html, body, #svelte {
+html,
+body,
+#svelte {
   height: 100%;
 }
 
@@ -56,5 +58,3 @@ main {
   flex: 1 0 auto;
   overflow: hidden;
 }
-
-

@@ -2,10 +2,10 @@ import { readdir } from "node:fs/promises";
 import { join } from "node:path";
 import config from "./config.json";
 
-const multipleVocabHostName:string = config["multipleVocabHostName"];
+const multipleVocabHostName: string = config["multipleVocabHostName"];
 const originalQueryHostName = "http://localhost:4099";
 
-async function readQueriesFromFiles(folderPath: string): Promise<Record<string, string>>  {
+async function readQueriesFromFiles(folderPath: string): Promise<Record<string, string>> {
   const files = await readdir(folderPath, { withFileTypes: true });
 
   const fileContents: Record<string, string> = {};
@@ -14,17 +14,22 @@ async function readQueriesFromFiles(folderPath: string): Promise<Record<string, 
     if (file.isFile()) {
       const filePath = join(folderPath, file.name);
       const text = await Bun.file(filePath).text();
-      fileContents[file.name.replace(".rq", "")] = text.replaceAll(originalQueryHostName, multipleVocabHostName);
+      fileContents[file.name.replace(".rq", "")] = text.replaceAll(
+        originalQueryHostName,
+        multipleVocabHostName
+      );
     }
   }
 
   return fileContents;
 }
 
-async function readQueriesWithRulesFromFiles(folderPath: string): Promise<Record<string, {query:string, rules:string}>>  {
+async function readQueriesWithRulesFromFiles(
+  folderPath: string
+): Promise<Record<string, { query: string; rules: string }>> {
   const files = await readdir(folderPath, { withFileTypes: true });
 
-  const fileContents: Record<string, {query:string, rules:string}> = {};
+  const fileContents: Record<string, { query: string; rules: string }> = {};
 
   for (const file of files) {
     if (file.isFile()) {
@@ -34,9 +39,9 @@ async function readQueriesWithRulesFromFiles(folderPath: string): Promise<Record
       const rules = await Bun.file(filePathRules).text();
 
       fileContents[file.name.replace(".rq", "")] = {
-          query:text.replaceAll(originalQueryHostName, multipleVocabHostName),
-          rules:rules.replaceAll(originalQueryHostName, multipleVocabHostName)
-        };
+        query: text.replaceAll(originalQueryHostName, multipleVocabHostName),
+        rules: rules.replaceAll(originalQueryHostName, multipleVocabHostName),
+      };
     }
   }
 

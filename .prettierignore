@@ -1,0 +1,69 @@
+# Prettier ignore file for the frontend project
+# Patterns are relative to this file (frontend/.prettierignore)
+
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build / output
+build/
+dist/
+public/build/
+static/build/
+.vite/
+.cache/
+.svelte-kit/
+out/
+
+# Bundler / lock files / package managers (don't format these)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+bun.lock
+
+# Editor / IDE / OS
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*.swo
+
+# Coverage / tests / temp
+coverage/
+.nyc_output/
+jest-cache/
+tmp/
+temp/
+
+# Generated artifacts
+*.min.css
+*.min.js
+*.map
+
+# Static assets that don't need formatting
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.ico
+*.svg
+*.webp
+*.avif
+*.mp4
+*.webm
+*.ogg
+*.mp3
+*.wav
+*.zip
+
+# Generated documentation/typed output
+docs/
+typedoc/
+dist-types/
+
+# Husky / Git hooks (keep these out of formatting)
+.husky/
+
+# Misc project-specific files to ignore
+example_queries/
+frontend/build/

@@ -1,21 +1,21 @@
 import { emptyQueryState, type IQueryState } from "$lib";
 
-export interface IRuleInput{
-  kg:string
+export interface IRuleInput {
+  kg: string;
 }
 
-export interface IChangeNetwork{
+export interface IChangeNetwork {
   previousNetwork: string;
   newNetwork: string;
 }
 
-export enum AlertType{
+export enum AlertType {
   Info,
   Error,
-  None
+  None,
 }
 
-export interface IAlert{
+export interface IAlert {
   type: AlertType;
   message?: string;
 }
@@ -24,9 +24,9 @@ export const QUERY_STATE: IQueryState = $state(emptyQueryState());
 
 export const EVENT_TARGET = $state(new EventTarget());
 
-export const RULES:IRuleInput = $state({kg:""});
+export const RULES: IRuleInput = $state({ kg: "" });
 
-export const ALERT: IAlert = $state({type:AlertType.None});
+export const ALERT: IAlert = $state({ type: AlertType.None });
 
 export const PROPOSED_QUERY_EVENT = "proposedQuery";
 

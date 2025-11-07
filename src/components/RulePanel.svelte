@@ -1,10 +1,15 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import {basicSetup} from "codemirror";
-  import {EditorView} from "@codemirror/view";
-  import {EditorState, Compartment} from "@codemirror/state";
-  import { turtle } from 'codemirror-lang-turtle';
-  import {RULES, EVENT_TARGET, CHANGE_RULE_EVENT, CHANGE_SCHEMA_ALIGNMENT_STATE_EVENT} from "../state.svelte";
+  import { onMount } from "svelte";
+  import { basicSetup } from "codemirror";
+  import { EditorView } from "@codemirror/view";
+  import { EditorState, Compartment } from "@codemirror/state";
+  import { turtle } from "codemirror-lang-turtle";
+  import {
+    RULES,
+    EVENT_TARGET,
+    CHANGE_RULE_EVENT,
+    CHANGE_SCHEMA_ALIGNMENT_STATE_EVENT,
+  } from "../state.svelte";
 
   let editor: HTMLElement | undefined;
   const exampleRules = `@prefix ex: <https://exemple.com#> .
@@ -34,74 +39,74 @@ _:rule1
   RULES.kg = exampleRules;
   const readOnly = new Compartment();
 
-  onMount(()=>{
-    let initialRules:string = exampleRules;
-    const storedRules = localStorage.getItem('rules');
-    if (storedRules!== null) {
+  onMount(() => {
+    let initialRules: string = exampleRules;
+    const storedRules = localStorage.getItem("rules");
+    if (storedRules !== null) {
       initialRules = storedRules;
     }
     RULES.kg = initialRules;
-     const view = new EditorView({
-      doc:  initialRules,
+    const view = new EditorView({
+      doc: initialRules,
       parent: editor!,
       extensions: [
         basicSetup,
         turtle(),
         readOnly.of(EditorState.readOnly.of(false)),
         EditorView.updateListener.of((update) => {
-              if (update.docChanged) {
-                const text = update.state.doc.toString();
-                RULES.kg = text;
-                localStorage.setItem('rules', text);
-              }
-            })
+          if (update.docChanged) {
+            const text = update.state.doc.toString();
+            RULES.kg = text;
+            localStorage.setItem("rules", text);
+          }
+        }),
       ],
     });
-     EVENT_TARGET.addEventListener(CHANGE_RULE_EVENT, ( (e: CustomEvent<string>)=>{
-       view.dispatch({
-           changes: {
-             from: 0,
-             to: view.state.doc.length,
-             insert: e.detail
-           }
-         });
-     }) as EventListener);
+    EVENT_TARGET.addEventListener(CHANGE_RULE_EVENT, ((e: CustomEvent<string>) => {
+      view.dispatch({
+        changes: {
+          from: 0,
+          to: view.state.doc.length,
+          insert: e.detail,
+        },
+      });
+    }) as EventListener);
 
-     EVENT_TARGET.addEventListener(CHANGE_SCHEMA_ALIGNMENT_STATE_EVENT, ((e: CustomEvent<boolean>) => {
-       view.dispatch({
-               effects: readOnly.reconfigure(EditorState.readOnly.of(!e.detail))
-             });
-       if(!e.detail == true){
-         editor!.classList.add("disable");
-       }else{
-         editor!.classList.remove("disable");
-       }
-
-     }) as EventListener);
-  })
-
+    EVENT_TARGET.addEventListener(CHANGE_SCHEMA_ALIGNMENT_STATE_EVENT, ((
+      e: CustomEvent<boolean>
+    ) => {
+      view.dispatch({
+        effects: readOnly.reconfigure(EditorState.readOnly.of(!e.detail)),
+      });
+      if (!e.detail == true) {
+        editor!.classList.add("disable");
+      } else {
+        editor!.classList.remove("disable");
+      }
+    }) as EventListener);
+  });
 </script>
 
-<div bind:this={editor} class="editor" ></div>
+<div bind:this={editor} class="editor" />
 
 <style>
-    .editor{
-        width: 50%;
-        height: 100%;
-        border: 1px solid #d1d1d1;
-    }
-    :global(.cm-editor){
-        height: 100%;
-    }
+  .editor {
+    width: 50%;
+    height: 100%;
+    border: 1px solid #d1d1d1;
+  }
+  :global(.cm-editor) {
+    height: 100%;
+  }
 
-    :global(.cm-editor .readOnly) {
+  :global(.cm-editor .readOnly) {
     background-color: #cccccc;
-    }
+  }
 
-    :global(.disable){
-        opacity: 0.6;
-        cursor: not-allowed;
-        background-color: #f5f5f5;
-        color: #6c757d;
-    }
+  :global(.disable) {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: #f5f5f5;
+    color: #6c757d;
+  }
 </style>
