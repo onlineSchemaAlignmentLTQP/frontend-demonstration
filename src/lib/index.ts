@@ -34,35 +34,34 @@ export function resetQueryState(queryState:IQueryState):void{
   queryState.alignmentKg = undefined;
 }
 
-export interface WorkerMessage {
-  type: string;
-  payload: any;
+
+
+export interface WorkerQueryPayload {
+  query: string;
+  rules: string;
+  schemaAlignment: boolean;
 }
 
-export interface WorkerQueryMessage extends WorkerMessage {
+export interface WorkerQueryMessage {
   type: "query";
-  payload: {
-    query: string;
-    rules: string;
-    schemaAlignment: boolean;
-  };
+  payload: WorkerQueryPayload;
 }
 
-export interface WorkerResponse {
+export interface WorkerResponse<T> {
   type: string;
-  result: any;
+  result: T;
 }
 
-export interface WorkerBindingResponse {
+export interface WorkerBindingResponse extends WorkerResponse<string> {
   type: "binding";
   result: string;
 }
-export interface WorkerEndResponse {
+export interface WorkerEndResponse extends WorkerResponse<IReportedResults> {
   type: "end";
   result: IReportedResults;
 }
 
-export interface WorkerErrorResponse {
+export interface WorkerErrorResponse extends WorkerResponse<string>{
   type: "error";
   result: string;
 }

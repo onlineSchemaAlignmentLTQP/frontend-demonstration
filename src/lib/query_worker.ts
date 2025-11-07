@@ -2,7 +2,7 @@ import { QueryEngine } from "query-sparql-link-traversal-solid-schema-alignment"
 import { QueryEngine as LocalQueryEngine } from "@comunica/query-sparql-rdfjs";
 import type * as RDF from "@rdfjs/types";
 import {
-  type WorkerMessage,
+  type WorkerQueryMessage,
   type WorkerResponse,
   type WorkerEndResponse,
   type WorkerBindingResponse,
@@ -44,9 +44,9 @@ interface ITrackedInfo{
 }
 
 // Listen for messages from the main thread
-self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
+self.onmessage = async (event: MessageEvent<WorkerQueryMessage>) => {
   const data = event.data;
-  let response: WorkerResponse = { type:"error", result: "unknown message type"};
+  let response: WorkerResponse<unknown> = { type:"error", result: "unknown message type"};
 
   switch (data.type) {
     case "query": {
