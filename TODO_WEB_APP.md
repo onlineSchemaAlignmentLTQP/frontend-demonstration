@@ -18,4 +18,4 @@
 - [ ] Popup when starting the app for presentation (title of the demo, link to the pubiclation, conference, close or enter tutorial mode)
 - [ ] Paper link in the footer
 
-- [ ] Take out the svelte logo in the tab
+- [X] Take out the svelte logo in the tab
