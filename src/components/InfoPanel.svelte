@@ -11,9 +11,36 @@
 </script>
 
 <ButtonGroup >
-  <Button onclick={()=>{window.open(multipleVocabHostName, "_blank", "noopener,noreferrer")}} >Multiple Vocab Network</Button>
-  <Button onclick={()=>{dataModelModal=true}} >Data Model</Button>
-  <Button onclick={()=>{window.open(normalNetworkHostName, "_blank", "noopener,noreferrer")}}>Single Vocab Network</Button>
+  <Button style="
+  background: var(--color-comunica-red);
+  border: solid black 1px;
+  color: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  " onclick={()=>{window.open(multipleVocabHostName, "_blank", "noopener,noreferrer")}} >Multiple Vocab Network</Button>
+  <Button style="
+  background: var(--color-comunica-red);
+  border: solid black 1px;
+  color: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  " onclick={()=>{dataModelModal=true}} >Data Model</Button>
+  <Button style="
+  background: var(--color-comunica-red);
+  border: solid black 1px;
+  color: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  " onclick={()=>{window.open(normalNetworkHostName, "_blank", "noopener,noreferrer")}}>Single Vocab Network</Button>
 </ButtonGroup>
 
 <Modal title="Data Model" form bind:open={dataModelModal} onaction={({ action }) => alert(`Handle "${action}"`)}>

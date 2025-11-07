@@ -5,7 +5,7 @@
 
 - [ ] Add a title to the code box
 
-- [ ] Make my own run and stop button
+- [X] Make my own run and stop button
 
 - [X] Add a loader to my result section
 

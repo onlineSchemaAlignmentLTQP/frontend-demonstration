@@ -156,8 +156,8 @@
     }
 
     .exec-btn{
-        background: var(--color-comunica-red);
-        border: none;
+        background-color: var(--color-comunica-red);
+        border: solid black 1px;
         color: white;
         padding: 0.5rem 0.75rem;
         border-radius: 6px;
@@ -173,7 +173,7 @@
     }
 
     .activated{
-        transform: translateY(-7px);
+        transform: translateY(-25px);
     }
 
 

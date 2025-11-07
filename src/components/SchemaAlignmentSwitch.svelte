@@ -20,4 +20,12 @@
 
 </script>
 
-<Toggle bind:checked={schemaAlignmentState} onclick={schemaAlignmentToggle}>Schema Alignment</Toggle>
+<div class="toggle-network">
+    <Toggle style="background-color: var(--color-comunica-red);;" bind:checked={schemaAlignmentState} onclick={schemaAlignmentToggle}>Schema Alignment</Toggle>
+</div>
+
+<style>
+    :global(.toggle-network  label  span){
+        background-color:var(--color-comunica-red);
+    }
+</style>

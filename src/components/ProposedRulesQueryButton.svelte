@@ -19,7 +19,15 @@
 
 </script>
 
-<Button>
+<Button style="
+background: var(--color-comunica-red);
+border: solid black 1px;
+color: white;
+padding: 0.5rem 0.75rem;
+border-radius: 6px;
+font-weight: 700;
+cursor: pointer;
+box-shadow: 0 2px 6px rgba(0,0,0,0.12);">
     Queries Different Vocabulary
   <ChevronDownOutline class="ms-2 h-6 w-6 text-white dark:text-white" />
 </Button>

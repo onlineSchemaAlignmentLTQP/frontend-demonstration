@@ -19,6 +19,24 @@
 </script>
 
 <ButtonGroup class="*:ring-primary-700!">
-  <Button onclick={()=>{changeNetworkEvent(multipleVocabHostName, normalNetworkHostName)}} >Convert to Multiple Vocab Network</Button>
-  <Button onclick={()=>{changeNetworkEvent(normalNetworkHostName, multipleVocabHostName)}}>Convert to Single Vocab Network</Button>
+  <Button style="
+  background: var(--color-comunica-red);
+  border: solid black 1px;
+  color: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  " onclick={()=>{changeNetworkEvent(multipleVocabHostName, normalNetworkHostName)}} >Convert to Multiple Vocab Network</Button>
+  <Button style="
+  background: var(--color-comunica-red);
+  border: solid black 1px;
+  color: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  " onclick={()=>{changeNetworkEvent(normalNetworkHostName, multipleVocabHostName)}}>Convert to Single Vocab Network</Button>
 </ButtonGroup>
