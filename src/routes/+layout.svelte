@@ -1,9 +1,11 @@
 <script lang="ts">
-    import "../app.css";
+  import "../app.css";
 
-    let { children } = $props();
+  let { children } = $props();
 </script>
 
-
-
-{@render children?.()}
+<div class="min-h-screen flex flex-col">
+  <main class="flex-1">
+    {@render children?.()}
+  </main>
+</div>

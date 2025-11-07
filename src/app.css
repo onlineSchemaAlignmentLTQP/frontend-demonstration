@@ -43,6 +43,20 @@
   --color-comunica-red: #be1622;
 }
 
+html, body, #svelte {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+  overflow: hidden;
+}
+
 /* Flowbite-Svelte button hover override
    Targets common Flowbite/Flowbite-Svelte button selectors and falls back
    to a generic button hover. Uses !important to override utility classes

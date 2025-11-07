@@ -1,7 +1,7 @@
 - [X] Make a tab for my option button
 - [X] Add an overlay to the tab
 
-- [ ] Make the color of the button red
+- [X] Make the color of the button red
 
 - [ ] Add a title to the code box
 
