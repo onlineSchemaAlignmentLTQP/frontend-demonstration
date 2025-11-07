@@ -16,16 +16,6 @@
     "test:unit": "vitest",
     "test": "npm run test:unit -- --run"
   },
-  "prettier": {
-    "printWidth": 100,
-    "tabWidth": 2,
-    "singleQuote": false,
-    "trailingComma": "es5",
-    "semi": true,
-    "plugins": [
-      "prettier-plugin-svelte"
-    ]
-  },
   "devDependencies": {
     "@comunica/types": "^4.4.0",
     "@eslint/compat": "^1.4.0",
@@ -51,14 +41,15 @@
     "vitest": "^3.2.4",
     "vitest-browser-svelte": "^1.1.0",
     "prettier": "^2.8.8",
-    "prettier-plugin-svelte": "^2.9.0"
+    "prettier-plugin-svelte": "^2.9.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.1.0"
   },
   "dependencies": {
     "@codemirror/state": "^6.5.2",
     "@codemirror/view": "^6.38.6",
     "@comunica/query-sparql-rdfjs": "^4.4.1",
     "@tailwindcss/vite": "^4.1.16",
-    "@triply/yasgui": "^4.2.28",
     "@triply/yasqe": "^4.2.28",
     "codemirror": "^6.0.2",
     "codemirror-lang-turtle": "^0.0.2",

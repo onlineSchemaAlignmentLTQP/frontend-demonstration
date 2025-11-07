@@ -1,69 +1,74 @@
-# Prettier ignore file for the frontend project
-# Patterns are relative to this file (frontend/.prettierignore)
+# Prettier ignore rules for this project
+# Generated / hand-maintained list of paths and file patterns that should not be
+# formatted by Prettier.
 
-# Dependencies
-node_modules/
-**/node_modules/
-
-# Build / output
-build/
-dist/
-public/build/
-static/build/
-.vite/
-.cache/
-.svelte-kit/
-out/
-
-# Bundler / lock files / package managers (don't format these)
+# Node modules and package manager caches
+node_modules
+.pnpm-store
+.pnpm-debug.log
+.bun.lockb
+bun.lock
 package-lock.json
 yarn.lock
 pnpm-lock.yaml
-bun.lock
 
-# Editor / IDE / OS
+# Build / output directories (Vite / SvelteKit / other frameworks)
+dist
+build
+out
+public/build
+public/assets
+.svelte-kit
+.vite
+.vite/*
+.next
+.nuxt
+.vercel
+dist-ssr
+
+# Editor / IDE / OS files
 .vscode/
 .idea/
+*.sublime-workspace
+*.sublime-project
 .DS_Store
-*.swp
-*.swo
+Thumbs.db
 
-# Coverage / tests / temp
-coverage/
-.nyc_output/
-jest-cache/
-tmp/
-temp/
+# Caches & temp
+.cache
+.parcel-cache
+.esbuild
+.tmp
+tmp
+temp
+logs
+*.log
 
-# Generated artifacts
-*.min.css
+# Test reports / coverage
+coverage
+.nyc_output
+jest-coverage
+playwright-report
+test-results
+
+# Generated / compiled artifacts
 *.min.js
+*.bundle.js
 *.map
+*.wasm
+**/*.d.ts
+types/**/*.d.ts
+generated/
+gen/
+build-*/**
 
-# Static assets that don't need formatting
-*.png
-*.jpg
-*.jpeg
-*.gif
-*.ico
-*.svg
-*.webp
-*.avif
-*.mp4
-*.webm
-*.ogg
-*.mp3
-*.wav
+# Vendor / third-party bundles
+vendor/
+public/vendor/
+
+# Misc - OS / packaging / lockfiles for other tools
+*.tgz
 *.zip
 
-# Generated documentation/typed output
-docs/
-typedoc/
-dist-types/
-
-# Husky / Git hooks (keep these out of formatting)
-.husky/
-
-# Misc project-specific files to ignore
-example_queries/
-frontend/build/
+# If you add more generated folders in your build pipeline, add them here
+*.md

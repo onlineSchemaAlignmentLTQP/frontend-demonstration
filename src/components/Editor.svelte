@@ -143,7 +143,7 @@
 </script>
 
 <div style="width:100%; height:50vh; position:relative;">
-  <div bind:this={yasguiDiv} class="editor" />
+  <div bind:this={yasguiDiv} class="editor"><!-- yasgui --></div>
   <div class="exec-buttons">
     <button class={`exec-btn ${QUERY_STATE.queryIsRunning ? "activated" : ""}`} on:click={runQuery}
       >Execute Query</button

@@ -87,7 +87,7 @@ _:rule1
   });
 </script>
 
-<div bind:this={editor} class="editor" />
+<div bind:this={editor} class="editor"><!-- code mirror --></div>
 
 <style>
   .editor {
