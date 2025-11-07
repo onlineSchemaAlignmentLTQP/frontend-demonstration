@@ -61,7 +61,7 @@
     overflow: hidden;
   }
 
-  /* Lower area takes the remaining 50% */
+
   .lower-interface {
     height: 40%;
     display: flex;
