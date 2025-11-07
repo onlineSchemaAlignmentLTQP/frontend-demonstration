@@ -38,3 +38,43 @@
     display: none;
   }
 }
+
+:root {
+  --color-comunica-red: #be1622;
+}
+
+/* Flowbite-Svelte button hover override
+   Targets common Flowbite/Flowbite-Svelte button selectors and falls back
+   to a generic button hover. Uses !important to override utility classes
+   applied by Tailwind/Flowbite.
+*/
+.flowbite button:hover,
+.flowbite .btn:hover,
+.flowbite .button:hover,
+.btn:hover,
+.button:hover,
+.fb-btn:hover,
+.fb-button:hover,
+button[data-flowbite]:hover,
+button[data-flowbite-svelte]:hover,
+button:hover {
+  background-color: var(--color-comunica-red) !important;
+  border-color: var(--color-comunica-red) !important;
+  color: white !important;
+}
+
+/* Smooth transitions for buttons */
+button,
+.btn,
+.button {
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+/* Focus ring tuned to the comunica red */
+.flowbite button:focus,
+.btn:focus,
+.button:focus,
+button:focus {
+  outline: 2px solid transparent;
+  box-shadow: 0 0 0 3px rgba(190,22,34,0.18);
+}

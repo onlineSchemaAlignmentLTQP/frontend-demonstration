@@ -22,7 +22,7 @@
         border-radius: 5px;
         padding-right: 0.5em;
         padding-left: 0.5em;
-        background-color: #be1622;
+        background-color: var(--color-comunica-red);
         color: white;
     }
 </style>

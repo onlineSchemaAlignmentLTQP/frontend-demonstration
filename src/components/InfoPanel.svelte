@@ -10,7 +10,7 @@
   let dataModelModal = $state(false);
 </script>
 
-<ButtonGroup class="*:ring-primary-700!">
+<ButtonGroup >
   <Button onclick={()=>{window.open(multipleVocabHostName, "_blank", "noopener,noreferrer")}} >Multiple Vocab Network</Button>
   <Button onclick={()=>{dataModelModal=true}} >Data Model</Button>
   <Button onclick={()=>{window.open(normalNetworkHostName, "_blank", "noopener,noreferrer")}}>Single Vocab Network</Button>
