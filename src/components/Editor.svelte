@@ -145,7 +145,7 @@
 <div style="width:100%; height:100%;">
   <div bind:this={yasguiDiv} class="editor"><!-- yasgui --></div>
   <div class="exec-buttons">
-    <button class={`exec-btn ${QUERY_STATE.queryIsRunning ? "activated" : ""}`} on:click={runQuery}
+    <button class={`${QUERY_STATE.queryIsRunning ? "activated" : "exec-btn"}`} on:click={runQuery}
       >Execute Query</button
     >
     <button class="exec-btn" on:click={stopQuery}>Stop Query</button>
@@ -154,17 +154,17 @@
 
 <style>
   .exec-buttons {
-    position: absolute;
+    position: relative;
     z-index: 999;
-    right: 1rem;
-    bottom: 1.5rem;
+    left: 65%;
+    bottom: 15%;
     display: flex;
     gap: 0.5rem;
     padding: 0.25rem;
     background: transparent;
   }
 
-  .exec-btn {
+  .activated, .exec-btn {
     background-color: var(--color-comunica-red);
     border: solid black 1px;
     color: white;
@@ -176,7 +176,6 @@
     transition: box-shadow 150ms ease, transform 150ms ease;
   }
 
-  .activated,
   .exec-buttons .exec-btn:hover {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
     transform: translateY(-2px);

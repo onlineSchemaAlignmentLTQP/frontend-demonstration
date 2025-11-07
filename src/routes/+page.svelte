@@ -38,7 +38,7 @@
 
   /* Top area: Editor and RulePanel side-by-side, occupying maximum space with no gap */
   .editor {
-    height: 100%;
+    height: 54%;
     display: flex;
     flex-direction: row;
     gap: 0;

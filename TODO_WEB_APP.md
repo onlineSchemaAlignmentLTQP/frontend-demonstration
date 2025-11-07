@@ -13,13 +13,13 @@
 
 - [x] Fix the bug of the footer that disapear
 
-- [ ] Underline my name in the footer
+- [X] Underline my name in the footer
 - [ ] Demo mode
 - [ ] Popup when starting the app for presentation (title of the demo, link to the pubiclation, conference, close or enter tutorial mode)
 - [ ] Paper link in the footer
 
 - [ ] Add gaps to buttons
-- [ ] Remove hovering when the button is pressed
-- [ ] Linkedin profile in new tab
+- [X] Remove hovering when the button is pressed
+- [X] Linkedin profile in new tab
 
 - [x] Take out the svelte logo in the tab
