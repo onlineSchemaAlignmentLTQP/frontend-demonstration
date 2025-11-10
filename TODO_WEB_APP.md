@@ -21,5 +21,6 @@
 - [ ] Add gaps to buttons
 - [X] Remove hovering when the button is pressed
 - [X] Linkedin profile in new tab
+- [X] Change mouse icon for the links
 
 - [x] Take out the svelte logo in the tab

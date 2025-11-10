@@ -28,4 +28,8 @@
         color: #0000EE;
         text-decoration: underline;
     }
+
+    :global(.app-footer footer span a:hover){
+        cursor: pointer;
+    }
 </style>

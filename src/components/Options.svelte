@@ -45,6 +45,7 @@
     background-color: var(--color-comunica-red);
     color: white;
   }
+
   :global(.option-panel ul li .text-primary-600) {
     background-color: var(--color-comunica-red);
     color: white;
