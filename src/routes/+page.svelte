@@ -61,7 +61,6 @@
     overflow: hidden;
   }
 
-
   .lower-interface {
     height: 40%;
     display: flex;

@@ -18,7 +18,6 @@
   }
 </script>
 
-<ButtonGroup class="*:ring-primary-700!">
   <Button
     style="
   background: var(--color-comunica-red);
@@ -49,4 +48,3 @@
       changeNetworkEvent(normalNetworkHostName, multipleVocabHostName);
     }}>Convert to Single Vocab Network</Button
   >
-</ButtonGroup>

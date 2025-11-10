@@ -8,9 +8,9 @@
 </script>
 
 <div class="option-panel">
-  <Tabs>
+  <Tabs >
     <Tooltip triggeredBy="#proposed-queries">Proposed queries for demonstration</Tooltip>
-    <TabItem id="proposed-queries" open title="Proposed Queries">
+    <TabItem id="proposed-queries" open title="Queries">
       <div class="proposed-buttons">
         <div class="btn-wrapper">
           <ProposedQueryButton />
@@ -46,12 +46,21 @@
     color: white;
   }
 
+  :global(.option-panel ul) {
+      display: flex;
+      justify-content: start;
+  }
+
   :global(.option-panel ul li .text-primary-600) {
     background-color: var(--color-comunica-red);
     color: white;
     font-weight: bolder;
   }
 
+  .option-panel{
+      width: 100%;
+      overflow: hidden;
+  }
   .extra {
     display: flex;
     flex-direction: column;

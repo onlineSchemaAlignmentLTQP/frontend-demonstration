@@ -18,7 +18,7 @@
 - [ ] Popup when starting the app for presentation (title of the demo, link to the pubiclation, conference, close or enter tutorial mode)
 - [ ] Paper link in the footer
 
-- [ ] Add gaps to buttons
+- [x] Add gaps to buttons
 - [X] Remove hovering when the button is pressed
 - [X] Linkedin profile in new tab
 - [X] Change mouse icon for the links

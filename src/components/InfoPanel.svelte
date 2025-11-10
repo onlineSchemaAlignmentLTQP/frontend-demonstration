@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ButtonGroup, Modal, Button, Tooltip } from "flowbite-svelte";
+  import { Modal, Button, Tooltip } from "flowbite-svelte";
   import configFile from "../../config.json?raw";
 
   const config = JSON.parse(configFile);
@@ -10,7 +10,7 @@
   let dataModelModal = $state(false);
 </script>
 
-<ButtonGroup>
+<div style="display: flex; flex-direction: column; gap:2rem;">
   <Tooltip triggeredBy="#multiple-vocab-btn"
     >Open a file explorer in a new tab with presenting the newtwork using multiple vocabularies</Tooltip
   >
@@ -69,7 +69,7 @@
       window.open(normalNetworkHostName, "_blank", "noopener,noreferrer");
     }}>Single Vocab Network</Button
   >
-</ButtonGroup>
+</div>
 
 <Modal
   title="Data Model"
