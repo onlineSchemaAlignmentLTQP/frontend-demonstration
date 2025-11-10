@@ -55,8 +55,12 @@
       {QUERY_STATE.results.length} result(s) {executionTime}
       {numberHttpRequests}
       {#if QUERY_STATE.alignmentKg !== undefined}
-        <button id="schema-alignment" onclick={schemaAlignmentEvent} style="color: #0000EE;text-decoration: underline;padding:0px; margin:0px;"
-          >see online alignment KG</button>
+        <button
+          id="schema-alignment"
+          onclick={schemaAlignmentEvent}
+          style="color: #0000EE;text-decoration: underline;padding:0px; margin:0px;"
+          >see online alignment KG</button
+        >
       {/if}
     </div>
   {:else}
@@ -65,9 +69,9 @@
 </div>
 
 <style>
-    #schema-alignment:hover{
-        cursor: pointer;
-    }
+  #schema-alignment:hover {
+    cursor: pointer;
+  }
 
   .meta-result {
     display: flex;

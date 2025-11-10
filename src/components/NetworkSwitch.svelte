@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ButtonGroup, Button } from "flowbite-svelte";
+  import { Button } from "flowbite-svelte";
   import configFile from "../../config.json?raw";
   import { EVENT_TARGET, CHANGE_NETWORK_EVENT, type IChangeNetwork } from "../state.svelte";
 
@@ -18,8 +18,8 @@
   }
 </script>
 
-  <Button
-    style="
+<Button
+  style="
   background: var(--color-comunica-red);
   border: solid black 1px;
   color: white;
@@ -29,12 +29,12 @@
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(0,0,0,0.12);
   "
-    onclick={() => {
-      changeNetworkEvent(multipleVocabHostName, normalNetworkHostName);
-    }}>Convert to Multiple Vocab Network</Button
-  >
-  <Button
-    style="
+  onclick={() => {
+    changeNetworkEvent(multipleVocabHostName, normalNetworkHostName);
+  }}>Convert to Multiple Vocab Network</Button
+>
+<Button
+  style="
   background: var(--color-comunica-red);
   border: solid black 1px;
   color: white;
@@ -44,7 +44,7 @@
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(0,0,0,0.12);
   "
-    onclick={() => {
-      changeNetworkEvent(normalNetworkHostName, multipleVocabHostName);
-    }}>Convert to Single Vocab Network</Button
-  >
+  onclick={() => {
+    changeNetworkEvent(normalNetworkHostName, multipleVocabHostName);
+  }}>Convert to Single Vocab Network</Button
+>

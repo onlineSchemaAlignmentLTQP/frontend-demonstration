@@ -16,7 +16,7 @@
 - [X] Underline my name in the footer
 - [ ] Demo mode
 - [ ] Popup when starting the app for presentation (title of the demo, link to the pubiclation, conference, close or enter tutorial mode)
-- [ ] Paper link in the footer
+- [X] Paper link in the footer
 
 - [x] Add gaps to buttons
 - [X] Remove hovering when the button is pressed

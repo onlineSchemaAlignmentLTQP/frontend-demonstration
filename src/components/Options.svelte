@@ -8,7 +8,7 @@
 </script>
 
 <div class="option-panel">
-  <Tabs >
+  <Tabs>
     <Tooltip triggeredBy="#proposed-queries">Proposed queries for demonstration</Tooltip>
     <TabItem id="proposed-queries" open title="Queries">
       <div class="proposed-buttons">
@@ -47,8 +47,8 @@
   }
 
   :global(.option-panel ul) {
-      display: flex;
-      justify-content: start;
+    display: flex;
+    justify-content: start;
   }
 
   :global(.option-panel ul li .text-primary-600) {
@@ -57,9 +57,9 @@
     font-weight: bolder;
   }
 
-  .option-panel{
-      width: 100%;
-      overflow: hidden;
+  .option-panel {
+    width: 100%;
+    overflow: hidden;
   }
   .extra {
     display: flex;

@@ -164,7 +164,8 @@
     background: transparent;
   }
 
-  .activated, .exec-btn {
+  .activated,
+  .exec-btn {
     background-color: var(--color-comunica-red);
     border: solid black 1px;
     color: white;
