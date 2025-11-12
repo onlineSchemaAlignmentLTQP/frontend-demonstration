@@ -41,6 +41,11 @@
 
 :root {
   --color-comunica-red: #be1622;
+  --selected-demo-element: #0b4ddb;
+}
+.demo-selected{
+    background-color: var(--selected-demo-element);
+    border: solid 2px;
 }
 
 html,

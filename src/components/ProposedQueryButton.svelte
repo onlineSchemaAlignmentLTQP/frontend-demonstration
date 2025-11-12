@@ -32,7 +32,7 @@ box-shadow: 0 2px 6px rgba(0,0,0,0.12);"
   Queries
   <ChevronDownOutline class="ms-2 h-6 w-6 text-white dark:text-white" />
 </Button>
-<Dropdown bind:isOpen simple>
+<Dropdown bind:isOpen simple placement="bottom">
   {#each Object.keys(queries) as query (query)}
     <DropdownItem
       onclick={() => {

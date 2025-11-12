@@ -1,4 +1,12 @@
 // place files you want to import through the `$lib` alias in this folder.
+import type { Snippet } from 'svelte';
+
+export interface IScenario{
+  step: number;
+  title: string;
+  content: Snippet;
+  selectedIcon: string[];
+}
 
 export interface IReportedResults {
   execution_time: number;

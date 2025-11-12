@@ -20,6 +20,12 @@ export interface IAlert {
   message?: string;
 }
 
+export interface IDemoMode {
+  activated: boolean;
+  step?: number;
+  selectedIcon: string[];
+}
+
 export const QUERY_STATE: IQueryState = $state(emptyQueryState());
 
 export const EVENT_TARGET = $state(new EventTarget());
@@ -35,3 +41,5 @@ export const CHANGE_SCHEMA_ALIGNMENT_STATE_EVENT = "schemaAlignmentState";
 export const CHANGE_NETWORK_EVENT = "changeNetwork";
 
 export const CHANGE_RULE_EVENT = "changeRule";
+
+export const DEMO_MODE: IDemoMode = $state({ activated: false, selectedIcon:[] });

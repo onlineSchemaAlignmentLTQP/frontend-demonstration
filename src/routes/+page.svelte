@@ -5,9 +5,13 @@
   import RulePanel from "../components/RulePanel.svelte";
   import Alert from "../components/Alert.svelte";
   import Footer from "../components/Footer.svelte";
+  import IntroModal from "../components/IntoModal.svelte";
+  import ScenarioModals from "../components/scenario/Scenarios.svelte";
 </script>
 
 <div class="page">
+  <IntroModal />
+  <ScenarioModals />
   <Alert />
   <div class="editor">
     <div class="editor-col left">

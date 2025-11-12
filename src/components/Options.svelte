@@ -5,12 +5,14 @@
   import NetworkSwitch from "./NetworkSwitch.svelte";
   import ProposedRulesQueryButton from "./ProposedRulesQueryButton.svelte";
   import InfoPanel from "./InfoPanel.svelte";
+  import { DEMO_MODE } from "../state.svelte";
+
 </script>
 
 <div class="option-panel">
   <Tabs>
     <Tooltip triggeredBy="#proposed-queries">Proposed queries for demonstration</Tooltip>
-    <TabItem id="proposed-queries" open title="Queries">
+    <TabItem key="proposed-queries" id="proposed-queries" open title="Queries">
       <div class="proposed-buttons">
         <div class="btn-wrapper">
           <ProposedQueryButton />
@@ -22,7 +24,7 @@
     </TabItem>
 
     <Tooltip triggeredBy="#options">Options to configure the schema alignment</Tooltip>
-    <TabItem id="options" open title="Options">
+    <TabItem key="options" id="options" title="Options">
       <div class="options">
         <SchemaAlignmentSwitch />
         <NetworkSwitch />
@@ -32,7 +34,7 @@
     <Tooltip placement="left" triggeredBy="#extra"
       >Explore the network and activate the tutorial mode</Tooltip
     >
-    <TabItem id="extra" open title="Extra">
+    <TabItem key="extra" id="extra" title="Extra">
       <div class="extra">
         <InfoPanel />
       </div>
@@ -61,6 +63,7 @@
     width: 100%;
     overflow: hidden;
   }
+
   .extra {
     display: flex;
     flex-direction: column;
