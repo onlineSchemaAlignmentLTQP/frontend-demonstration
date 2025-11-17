@@ -14,7 +14,7 @@ import { type SafePromise, type Result, error, result, isError } from "result-in
 import { Parser as N3Parser, Store, Writer as N3Writer } from "n3";
 import { DataFactory } from "rdf-data-factory";
 
-const SEM_MAP_PREFIX = "https://semanticmapping.org/vocab#";
+const SEM_MAP_PREFIX = "https://onlineschemaalignmentltqp.github.io/vocabulary/vocab.ttl#";
 
 const DF = new DataFactory<RDF.BaseQuad>();
 const ENGINE = new QueryEngine();
@@ -114,7 +114,7 @@ async function convertRules(
 
   const bindingsStream = await LOCAL_ENGINE.queryBindings(
     `
-     PREFIX semmap: <https://semanticmapping.org/vocab#>
+     PREFIX semmap: <https://onlineschemaalignmentltqp.github.io/vocabulary/vocab.ttl#>
      PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
      PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
