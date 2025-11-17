@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "bun run ./generate_example_queries.ts && vite dev",
-    "build": "bun run ./generate_example_queries.ts && run vite build",
+    "build": "bun run ./generate_example_queries.ts && bun run vite build",
     "preview": "vite preview",
     "prepare": "svelte-kit sync || echo ''",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
