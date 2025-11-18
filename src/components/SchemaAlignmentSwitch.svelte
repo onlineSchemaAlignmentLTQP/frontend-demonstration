@@ -3,6 +3,7 @@
   import { Toggle } from "flowbite-svelte";
   import { EVENT_TARGET, CHANGE_SCHEMA_ALIGNMENT_STATE_EVENT } from "../state.svelte";
 
+  let domDiv:HTMLDivElement|null;
   // start at false because we toggle automatically
   let schemaAlignmentState = false;
 
@@ -13,17 +14,23 @@
       detail: schemaAlignmentState,
     });
     EVENT_TARGET.dispatchEvent(event);
+    const toggleSwitch = domDiv?.querySelector(".toggle-network label span");
+    console.log(toggleSwitch)
+    if(!schemaAlignmentState){
+      toggleSwitch?.classList.add("alignment-switch-unselected");
+    }else{
+      toggleSwitch?.classList.remove("alignment-switch-unselected");
+    }
   }
 
   onMount(() => {
-    schemaAlignmentState = false;
-    schemaAlignmentToggle();
+    schemaAlignmentState = true;
+
   });
 </script>
 
-<div class="toggle-network">
+<div class="toggle-network" bind:this={domDiv}>
   <Toggle
-    style="background-color: var(--color-comunica-red);;"
     bind:checked={schemaAlignmentState}
     onclick={schemaAlignmentToggle}>Schema Alignment</Toggle
   >
@@ -32,5 +39,8 @@
 <style>
   :global(.toggle-network label span) {
     background-color: var(--color-comunica-red);
+  }
+  :global(.alignment-switch-unselected){
+      background-color: #f3f4f6 !important;
   }
 </style>
